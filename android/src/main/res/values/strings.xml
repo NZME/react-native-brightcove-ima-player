@@ -1,0 +1,6 @@
+<resources>
+    <!-- Below are hex strings taken from the fontawesome-webfont.ttf used in the Brightcove SDK -->
+<!--    <string name="brightcove_controls_rewind">&#xf048;</string>-->
+    <string name="nzh_brightcove_controls_enter_full_screen">&#xf065;</string>
+    <string name="nzh_brightcove_controls_exit_full_screen">&#xf066;</string>
+</resources>

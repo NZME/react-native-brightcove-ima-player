@@ -1,0 +1,12 @@
+<resources>
+    <style name="BrightcoveControlBar.Custom">
+        <item name="brightcove_full_screen">false</item>
+        <item name="brightcove_rewind">false</item>
+        <item name="brightcove_seekbar">true</item>
+        <item name="brightcove_vr_mode">false</item>
+    </style>
+
+    <style name="BrightcoveControlBar.TV.Custom">
+        <item name="brightcove_vr_mode">false</item>
+    </style>
+</resources>

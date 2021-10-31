@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.brightcove.player.mediacontroller.BrightcoveControlBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bmc="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="Overdraw, InconsistentLayout"
+        android:id="@+id/brightcove_control_bar"
+        android:background="@color/bmc_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        style="@style/BrightcoveControlBar.Custom">
+
+    <Button
+            android:id="@id/play"
+            style="@style/BorderlessButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible"
+            android:text="@string/brightcove_controls_play"/>
+
+    <Button
+        android:id="@+id/rewind_custom"
+        style="@style/BorderlessButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="visible"
+        android:text="@string/brightcove_controls_rewind"/>
+
+    <TextView
+            android:id="@id/current_time"
+            android:text="@string/time_placeholder"
+            android:padding="4dp"
+            android:textColor="@color/bmc_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible"/>
+
+<!--    <TextView
+            tools:ignore="InconsistentLayout"
+            android:id="@id/time_separator"
+            android:text="@string/time_separator"
+            android:padding="4dp"
+            android:textColor="@color/bmc_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible"/>-->
+
+    <!-- If you want to remove one default element, you must disable it through the BrightcoveControlBar style
+         Please look at the @style/BrightcoveControlBar.Custom -->
+    <com.brightcove.player.mediacontroller.BrightcoveSeekBar
+        android:id="@id/seek_bar"
+        style="@style/BrightcoveSeekBarDefault"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:indeterminateOnly="false"
+        android:splitTrack="false"
+        android:visibility="visible"
+        bmc:brightcove_marker_color="@color/white"
+        bmc:brightcove_marker_width="3.0"/>
+
+    <TextView
+        android:id="@id/end_time"
+        android:text="@string/time_placeholder"
+        android:padding="4dp"
+        android:textColor="@color/bmc_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="visible"/>
+
+    <View
+            tools:ignore="InconsistentLayout"
+            android:id="@id/one_line_spacer"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:visibility="visible"/>
+
+    <Button
+            style="@style/BorderlessButton"
+            android:id="@+id/full_screen_custom"
+            android:padding="4dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:visibility="visible"
+            android:text="@string/nzh_brightcove_controls_enter_full_screen"/>
+
+</com.brightcove.player.mediacontroller.BrightcoveControlBar>

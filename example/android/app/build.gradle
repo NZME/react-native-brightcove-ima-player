@@ -204,7 +204,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation project(':reactnativebrightcoveimaplayer')
+    implementation project(':react-native-brightcove-ima-player')
 }
 
 // Run this once to be able to run the application with BUCK

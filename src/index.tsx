@@ -1,26 +1,2 @@
-import {
-  requireNativeComponent,
-  UIManager,
-  Platform,
-  ViewStyle,
-} from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-brightcove-ima-player' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
-type BrightcoveImaPlayerProps = {
-  color: string;
-  style: ViewStyle;
-};
-
-const ComponentName = 'BrightcoveImaPlayerView';
-
-export const BrightcoveImaPlayerView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<BrightcoveImaPlayerProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+export { BrightcoveIMAPlayer } from './BrightcoveIMAPlayer';
+export { BrightcoveIMAPlayerPoster } from './BrightcoveIMAPlayerPoster';

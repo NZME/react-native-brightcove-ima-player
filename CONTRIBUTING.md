@@ -53,7 +53,7 @@ yarn test
 
 To edit the Objective-C files, open `example/ios/BrightcoveImaPlayerExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-brightcove-ima-player`.
 
-To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativebrightcoveimaplayer` under `Android`.
+To edit the Kotlin files, open `example/android` in Android studio and find the source files at `brightcoveimaplayer` under `Android`.
 
 ### Commit message convention
 

@@ -11,11 +11,11 @@ npm install react-native-brightcove-ima-player
 ## Usage
 
 ```js
-import { BrightcoveImaPlayerView } from "react-native-brightcove-ima-player";
+import { BrightcoveIMAPlayer } from "react-native-brightcove-ima-player";
 
 // ...
 
-<BrightcoveImaPlayerView color="tomato" />
+<BrightcoveIMAPlayer />
 ```
 
 ## Contributing

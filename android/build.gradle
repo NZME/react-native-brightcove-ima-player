@@ -1,3 +1,5 @@
+apply from: 'constants.gradle'
+
 buildscript {
     if (project == rootProject) {
         repositories {
@@ -48,6 +50,9 @@ repositories {
         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
         url("$rootDir/../node_modules/react-native/android")
     }
+    maven {
+        url 'http://repo.brightcove.com/releases'
+    }
     google()
     mavenCentral()
     jcenter()
@@ -56,4 +61,10 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.brightcove.player:android-ima-plugin:${BRIGHTCOVE_VERSION}"
+    implementation 'com.google.ads.interactivemedia.v3:interactivemedia:'+GOOGLE_IMA_SDK_VERSION
+    implementation 'com.google.android.gms:play-services-ads:'+PLAY_SERVICES_VERSION
+    implementation "androidx.legacy:legacy-support-v4:${ANDROIDX_LEGACY_SUPPORT_V4}"
+    implementation "com.brightcove.player:exoplayer2:${BRIGHTCOVE_VERSION}"
+    implementation "androidx.media:media:${ANDROIDX_MEDIA}"
 }
