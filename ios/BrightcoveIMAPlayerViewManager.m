@@ -88,5 +88,4 @@ RCT_EXPORT_METHOD(dispose:(nonnull NSNumber *)reactTag) {
     }];
 }
 
-
 @end

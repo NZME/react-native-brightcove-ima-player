@@ -1,6 +1,7 @@
 #import "BrightcoveIMAPlayerView.h"
+#import <React/RCTUtils.h>
 
-@interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate>
+@interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
 @end
 
@@ -13,8 +14,42 @@
     return self;
 }
 
+- (id) init
+{
+    self = [super init];
+    if (!self) return nil;
+
+    for (NSString *name in @[
+             UIApplicationDidBecomeActiveNotification,
+             UIApplicationDidEnterBackgroundNotification
+           ]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleAppStateDidChange:)
+                                                     name:name
+                                                   object:nil];
+      }
+
+    return self;
+}
+
 - (void)setupWithSettings:(NSDictionary*)settings {
     /* added */
+    BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
+    options.jumpBackInterval = 999;
+    [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
+    options.presentingViewController = RCTPresentedViewController();
+    
+    BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
+    [control.progressSlider setTrackHeight:2];
+    [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
+
+    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:nil options:options controlsView:control];
+    _playerView.delegate = self;
+    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _playerView.backgroundColor = UIColor.blackColor;
+
+    [self addSubview:_playerView];
+    
     NSString * kViewControllerIMAPublisherID = [settings objectForKey:@"publisherProvidedID"];
     NSString * kViewControllerIMALanguage = @"en";
 
@@ -25,26 +60,34 @@
     imaSettings.language = kViewControllerIMALanguage;
 
     IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
-    renderSettings.linkOpenerPresentingController = (UIViewController*)[self nextResponder];
+    renderSettings.linkOpenerPresentingController = RCTPresentedViewController();
     renderSettings.linkOpenerDelegate = self;
+
     if (_targetAdVideoLoadTimeout == 0) {
-        renderSettings.loadVideoTimeout = 3;
+        renderSettings.loadVideoTimeout = 3.;
     } else {
         renderSettings.loadVideoTimeout = _targetAdVideoLoadTimeout;
     }
 
     NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
     BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
+//    NSLog(@"ViewController Debug - IMAUrl: %@", IMAUrl);
+    
+    NSDictionary *imaPlaybackSessionOptions = @{ kBCOVIMAOptionIMAPlaybackSessionDelegateKey: self };
+    
+    BCOVPlayerSDKManager *manager = [BCOVPlayerSDKManager sharedManager];
 
-    _playbackController = [BCOVPlayerSDKManager.sharedManager
+    _playbackController = [manager
                            createIMAPlaybackControllerWithSettings:imaSettings
                            adsRenderingSettings:renderSettings
                            adsRequestPolicy:adsRequestPolicy
-                           adContainer:self
-                           viewController:(UIViewController*)[self nextResponder]
+                           adContainer:self.playerView.contentOverlayView
+                           viewController:RCTPresentedViewController()
                            companionSlots:nil
-                           viewStrategy:nil];
+                           viewStrategy:nil
+                           options:imaPlaybackSessionOptions];
 
+    _playerView.playbackController = _playbackController;
     _playbackController.delegate = self;
 
     // By pass mute button
@@ -59,41 +102,8 @@
     _playbackController.autoPlay = autoPlay;
     _playbackController.allowsExternalPlayback = allowsExternalPlayback;
 
-    BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
-    [control.progressSlider setTrackHeight:2];
-    [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
-
-    BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
-    options.jumpBackInterval = 999;
-    [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
-
-    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:options controlsView:control];
-    _playerView.delegate = self;
-    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _playerView.backgroundColor = UIColor.blackColor;
-
     _targetVolume = 1.0;
     _autoPlay = autoPlay;
-
-    [self addSubview:_playerView];
-
-    /*
-     _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
-     _playbackController.delegate = self;
-     _playbackController.autoPlay = NO;
-     _playbackController.autoAdvance = YES;
-
-     _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
-     _playerView.delegate = self;
-     _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-     _playerView.backgroundColor = UIColor.blackColor;
-
-     _targetVolume = 1.0;
-     _autoPlay = NO;
-
-     [self addSubview:_playerView];
-
-     */
 }
 
 - (void)setupService {
@@ -219,7 +229,45 @@
     }
 }
 
+-(void) pause {
+    if (self.playbackController) {
+        if (_adsPlaying) {
+            [self.playbackController pauseAd];
+        }
+        [self.playbackController pause];
+    }
+}
+
+-(void) play {
+    if (self.playbackController) {
+        if (_adsPlaying) {
+            [self.playbackController resumeAd];
+            [self.playbackController pause];
+        } else {
+            [self.playbackController play];
+        }
+    }
+}
+
+-(void)dispose {
+    [self.playbackController setVideos:@[]];
+    self.playbackController = nil;
+}
+
+- (void)handleAppStateDidChange:(NSNotification *)notification
+{
+    if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
+//        NSLog(@"ViewController Debug - handleAppStateDidChange %@", notification.name);
+        if (_adsPlaying) {
+            [self.playbackController resumeAd];
+        }
+    }
+}
+
+#pragma mark - BCOVPlaybackControllerBasicDelegate methods
+
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
+//    NSLog(@"ViewController Debug - lifecycleEvent %@", lifecycleEvent);
     if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
@@ -267,6 +315,7 @@
 
     if ([type isEqualToString:kBCOVIMALifecycleEventAdsLoaderLoaded])
     {
+//        NSLog(@"ViewController Debug - Ads loaded.");
         // When ads load successfully, the kBCOVIMALifecycleEventAdsLoaderLoaded lifecycle event
 //        // returns an NSDictionary containing a reference to the IMAAdsManager.
 //        IMAAdsManager *adsManager = lifecycleEvent.properties[kBCOVIMALifecycleEventPropertyKeyAdsManager];
@@ -280,7 +329,8 @@
     else if ([type isEqualToString:kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent])
     {
         IMAAdEvent *adEvent = lifecycleEvent.properties[@"adEvent"];
-
+//        NSLog(@"ViewController Debug - adEvent %@", adEvent);
+        
         switch (adEvent.type)
         {
             case kIMAAdEvent_STARTED:
@@ -316,9 +366,11 @@
     float bufferProgress = _playerView.controlsView.progressSlider.bufferProgress;
     if (_lastBufferProgress != bufferProgress) {
         _lastBufferProgress = bufferProgress;
-        self.onUpdateBufferProgress(@{
-                                      @"bufferProgress": @(bufferProgress),
-                                      });
+        if (self.onUpdateBufferProgress) {
+            self.onUpdateBufferProgress(@{
+                                          @"bufferProgress": @(bufferProgress),
+                                          });
+        }
     }
 }
 
@@ -334,50 +386,52 @@
     }
 }
 
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
+#pragma mark - BCOVPlaybackControllerAdsDelegate methods
+
+- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
+//    NSLog(@"ViewController Debug - didExitAdSequence: %@", adSequence);
     [self.playbackController pause];
 }
 
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
+- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
+//    NSLog(@"ViewController Debug - didExitAdSequence: %@", adSequence);
+    [self.playbackController play];
+}
+
+- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
+//    NSLog(@"ViewController Debug - didEnterAd: %@", ad);
     [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAd:(BCOVAd *)ad {
-    [self.playbackController play];
-}
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
+//    NSLog(@"ViewController Debug - didExitAd: %@", ad);
     [self.playbackController play];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session ad:(BCOVAd *)ad didProgressTo:(NSTimeInterval)progress {
+//    NSLog(@"ViewController Debug - didProgressTo: %f", progress);
     if (_playing) {
         [self.playbackController pause];
     }
 }
 
--(void) pause {
-    if (self.playbackController) {
-        if (_adsPlaying) {
-            [self.playbackController pauseAd];
-        }
-        [self.playbackController pause];
-    }
-}
--(void) play {
-    if (self.playbackController) {
-        if (_adsPlaying) {
-            [self.playbackController resumeAd];
-            [self.playbackController pause];
-        } else {
-            [self.playbackController play];
-        }
-    }
+#pragma mark - IMAPlaybackSessionDelegate Methods
+
+- (void)willCallIMAAdsLoaderRequestAdsWithRequest:(IMAAdsRequest *)adsRequest forPosition:(NSTimeInterval)position
+{
+    // for demo purposes, increase the VAST ad load timeout.
+//    adsRequest.vastLoadTimeout = 3000.;
+//    NSLog(@"ViewController Debug - IMAAdsRequest.vastLoadTimeout set to %.1f milliseconds.", adsRequest.vastLoadTimeout);
 }
 
--(void)dispose {
-    [self.playbackController setVideos:@[]];
-    self.playbackController = nil;
+#pragma mark - IMALinkOpenerDelegate Methods
+
+- (void)linkOpenerDidCloseInAppLink:(NSObject *)linkOpener
+{
+    // Called when the in-app browser has closed.
+    if (_adsPlaying) {
+        [self.playbackController resumeAd];
+    }
 }
 
 @end
