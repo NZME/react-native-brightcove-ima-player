@@ -1,7 +1,6 @@
 #import "BrightcoveIMAPlayerView.h"
-#import "BrightcovePlayerOfflineVideoManager.h"
 
-@interface BrightcoveIMAPlayerView () <IMAWebOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate>
+@interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate>
 
 @end
 
@@ -26,13 +25,25 @@
     imaSettings.language = kViewControllerIMALanguage;
 
     IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
-    renderSettings.webOpenerPresentingController = (UIViewController*)[self nextResponder];
-    renderSettings.webOpenerDelegate = self;
+    renderSettings.linkOpenerPresentingController = (UIViewController*)[self nextResponder];
+    renderSettings.linkOpenerDelegate = self;
+    if (_targetAdVideoLoadTimeout == 0) {
+        renderSettings.loadVideoTimeout = 3;
+    } else {
+        renderSettings.loadVideoTimeout = _targetAdVideoLoadTimeout;
+    }
 
     NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
     BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
 
-    _playbackController = [BCOVPlayerSDKManager.sharedManager createIMAPlaybackControllerWithSettings:imaSettings adsRenderingSettings:renderSettings adsRequestPolicy:adsRequestPolicy adContainer:self companionSlots:nil viewStrategy:nil];
+    _playbackController = [BCOVPlayerSDKManager.sharedManager
+                           createIMAPlaybackControllerWithSettings:imaSettings
+                           adsRenderingSettings:renderSettings
+                           adsRequestPolicy:adsRequestPolicy
+                           adContainer:self
+                           viewController:(UIViewController*)[self nextResponder]
+                           companionSlots:nil
+                           viewStrategy:nil];
 
     _playbackController.delegate = self;
 
@@ -93,22 +104,9 @@
 }
 
 - (void)loadMovie {
-    if (_videoToken) {
-        BCOVVideo *video = [[BrightcovePlayerOfflineVideoManager sharedManager] videoObjectFromOfflineVideoToken:_videoToken];
-        if (video) {
-            [self.playbackController setVideos: @[ video ]];
-        }
-        return;
-    }
     if (!_playbackService) return;
     if (_videoId) {
         [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-            if (video) {
-                [self.playbackController setVideos: @[ video ]];
-            }
-        }];
-    } else if (_referenceId) {
-        [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self.playbackController setVideos: @[ video ]];
             }
@@ -122,22 +120,9 @@
     return [BCOVPlayerSDKManager.sharedManager createPlaybackControllerWithSessionProvider:provider viewStrategy:nil];
 }
 
-- (void)setReferenceId:(NSString *)referenceId {
-    _referenceId = referenceId;
-    _videoId = NULL;
-    [self setupService];
-    [self loadMovie];
-}
-
 - (void)setVideoId:(NSString *)videoId {
     _videoId = videoId;
-    _referenceId = NULL;
     [self setupService];
-    [self loadMovie];
-}
-
-- (void)setVideoToken:(NSString *)videoToken {
-    _videoToken = videoToken;
     [self loadMovie];
 }
 
@@ -184,6 +169,13 @@
 - (void)setBitRate:(NSNumber*)bitRate {
     _targetBitRate = bitRate.doubleValue;
     [self refreshBitRate];
+}
+
+- (void)setAdVideoLoadTimeout:(NSNumber*)adVideoLoadTimeout {
+    _targetAdVideoLoadTimeout = adVideoLoadTimeout.intValue / 1000;
+    _playbackServiceDirty = YES;
+    [self setupService];
+    [self loadMovie];
 }
 
 - (void)setPlaybackRate:(NSNumber*)playbackRate {

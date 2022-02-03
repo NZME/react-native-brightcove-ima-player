@@ -27,14 +27,13 @@
 @property (nonatomic) float lastBufferProgress;
 @property (nonatomic) float targetVolume;
 @property (nonatomic) float targetBitRate;
+@property (nonatomic) int targetAdVideoLoadTimeout;
 @property (nonatomic) float targetPlaybackRate;
 @property (nonatomic) BOOL playbackServiceDirty;
 @property (nonatomic) NSTimeInterval currentVideoDuration;
 
 @property (nonatomic, copy) NSDictionary *settings;
-@property (nonatomic, copy) NSString *referenceId;
 @property (nonatomic, copy) NSString *videoId;
-@property (nonatomic, copy) NSString *videoToken;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
 @property (nonatomic, copy) RCTDirectEventBlock onReady;

@@ -1,5 +1,4 @@
 #import "BrightcoveIMAPlayerPosterView.h"
-#import "BrightcovePlayerOfflineVideoManager.h"
 
 @interface BrightcoveIMAPlayerPosterView ()
 @end
@@ -14,22 +13,9 @@
     return self;
 }
 
-- (void)setReferenceId:(NSString *)referenceId {
-    _referenceId = referenceId;
-    _videoId = NULL;
-    [self setupService];
-    [self loadPoster];
-}
-
 - (void)setVideoId:(NSString *)videoId {
     _videoId = videoId;
-    _referenceId = NULL;
     [self setupService];
-    [self loadPoster];
-}
-
-- (void)setVideoToken:(NSString *)videoToken {
-    _videoToken = videoToken;
     [self loadPoster];
 }
 
@@ -65,22 +51,9 @@
 }
 
 - (void)loadPoster {
-    if (_videoToken) {
-        BCOVVideo *video = [[BrightcovePlayerOfflineVideoManager sharedManager] videoObjectFromOfflineVideoToken:_videoToken];
-        if (video) {
-            self.image = [UIImage imageWithContentsOfFile:video.properties[kBCOVOfflineVideoPosterFilePathPropertyKey]];
-        }
-        return;
-    }
     if (!_playbackService) return;
     if (_videoId) {
         [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-            if (video) {
-                [self loadImage:video.properties[kBCOVVideoPropertyKeyPoster]];
-            }
-        }];
-    } else if (_referenceId) {
-        [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self loadImage:video.properties[kBCOVVideoPropertyKeyPoster]];
             }
