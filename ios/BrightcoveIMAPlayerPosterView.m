@@ -1,10 +1,10 @@
-#import "BrightcovePlayerPoster.h"
+#import "BrightcoveIMAPlayerPosterView.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
 
-@interface BrightcovePlayerPoster ()
+@interface BrightcoveIMAPlayerPosterView ()
 @end
 
-@implementation BrightcovePlayerPoster
+@implementation BrightcoveIMAPlayerPosterView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

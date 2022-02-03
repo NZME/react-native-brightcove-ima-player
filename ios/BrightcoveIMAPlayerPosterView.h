@@ -4,7 +4,7 @@
 #import <React/RCTBridge.h>
 #import <React/UIView+React.h>
 
-@interface BrightcovePlayerPoster : UIImageView
+@interface BrightcoveIMAPlayerPosterView : UIImageView
 
 @property (nonatomic) BCOVPlaybackService *playbackService;
 @property (nonatomic) BOOL playbackServiceDirty;

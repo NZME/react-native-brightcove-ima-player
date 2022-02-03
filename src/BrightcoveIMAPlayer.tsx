@@ -19,7 +19,13 @@ type TBrightcoveIMAPlayerSettings = {
   autoPlay?: boolean;
   allowsExternalPlayback?: boolean;
 };
-
+/*
+removed:
+referenceId: PropTypes.string,
+videoToken: PropTypes.string,
+added:
+adVideoLoadTimeout?: number;
+ */
 type BrightcoveIMAPlayerProps = ViewProps & {
   accountId: string;
   policyKey: string;

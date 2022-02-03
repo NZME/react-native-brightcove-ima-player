@@ -15,7 +15,7 @@
 @import BrightcoveIMA;
 @import GoogleInteractiveMediaAds;
 
-@interface BrightcovePlayerIMA : UIView<BCOVOfflineVideoManagerDelegate>
+@interface BrightcoveIMAPlayerView : UIView<BCOVOfflineVideoManagerDelegate>
 
 @property (nonatomic) BCOVPlaybackService *playbackService;
 @property (nonatomic) id<BCOVPlaybackController> playbackController;

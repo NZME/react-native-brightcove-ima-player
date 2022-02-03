@@ -1,5 +1,5 @@
 #import "BrightcoveIMAPlayerPosterViewManager.h"
-#import "BrightcovePlayerPoster.h"
+#import "BrightcoveIMAPlayerPosterView.h"
 #import <React/RCTUIManager.h>
 
 @implementation BrightcoveIMAPlayerPosterViewManager
@@ -9,7 +9,7 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 
 - (UIView *)view {
-    return [[BrightcovePlayerPoster alloc] init];
+    return [[BrightcoveIMAPlayerPosterView alloc] init];
 }
 
 - (dispatch_queue_t)methodQueue {

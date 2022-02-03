@@ -1,11 +1,11 @@
-#import "BrightcovePlayerIMA.h"
+#import "BrightcoveIMAPlayerView.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
 
-@interface BrightcovePlayerIMA () <IMAWebOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate>
+@interface BrightcoveIMAPlayerView () <IMAWebOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate>
 
 @end
 
-@implementation BrightcovePlayerIMA
+@implementation BrightcoveIMAPlayerView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -18,28 +18,28 @@
     /* added */
     NSString * kViewControllerIMAPublisherID = [settings objectForKey:@"publisherProvidedID"];
     NSString * kViewControllerIMALanguage = @"en";
-    
+
     IMASettings *imaSettings = [[IMASettings alloc] init];
     if (kViewControllerIMAPublisherID != nil) {
         imaSettings.ppid = kViewControllerIMAPublisherID;
     }
     imaSettings.language = kViewControllerIMALanguage;
-    
+
     IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
     renderSettings.webOpenerPresentingController = (UIViewController*)[self nextResponder];
     renderSettings.webOpenerDelegate = self;
-    
+
     NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
     BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
-    
+
     _playbackController = [BCOVPlayerSDKManager.sharedManager createIMAPlaybackControllerWithSettings:imaSettings adsRenderingSettings:renderSettings adsRequestPolicy:adsRequestPolicy adContainer:self companionSlots:nil viewStrategy:nil];
-    
+
     _playbackController.delegate = self;
-    
+
     // By pass mute button
     NSError *error = nil;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-    
+
     BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
     BOOL autoPlay = [settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
     BOOL allowsExternalPlayback = [settings objectForKey:@"allowsExternalPlayback"] != nil ? [[settings objectForKey:@"allowsExternalPlayback"] boolValue] : YES;
@@ -47,41 +47,41 @@
     _playbackController.autoAdvance = autoAdvance;
     _playbackController.autoPlay = autoPlay;
     _playbackController.allowsExternalPlayback = allowsExternalPlayback;
-    
+
     BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
     [control.progressSlider setTrackHeight:2];
     [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
-    
+
     BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
     options.jumpBackInterval = 999;
     [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
-        
+
     _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:options controlsView:control];
     _playerView.delegate = self;
     _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _playerView.backgroundColor = UIColor.blackColor;
-    
+
     _targetVolume = 1.0;
     _autoPlay = autoPlay;
-    
+
     [self addSubview:_playerView];
-    
+
     /*
      _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
      _playbackController.delegate = self;
      _playbackController.autoPlay = NO;
      _playbackController.autoAdvance = YES;
-     
+
      _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
      _playerView.delegate = self;
      _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
      _playerView.backgroundColor = UIColor.blackColor;
-     
+
      _targetVolume = 1.0;
      _autoPlay = NO;
-     
+
      [self addSubview:_playerView];
-     
+
      */
 }
 
@@ -261,7 +261,7 @@
                 }
             }
         }
-        
+
         if (self.onPause) {
             self.onPause(@{});
         }
@@ -270,11 +270,11 @@
 //            self.onEnd(@{});
 //        }
     }
-    
+
     NSString *type = lifecycleEvent.eventType;
 
     if ([type isEqualToString:kBCOVIMALifecycleEventAdsLoaderLoaded])
-    {        
+    {
         // When ads load successfully, the kBCOVIMALifecycleEventAdsLoaderLoaded lifecycle event
 //        // returns an NSDictionary containing a reference to the IMAAdsManager.
 //        IMAAdsManager *adsManager = lifecycleEvent.properties[kBCOVIMALifecycleEventPropertyKeyAdsManager];

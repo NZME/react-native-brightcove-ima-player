@@ -1,5 +1,5 @@
 #import "BrightcoveIMAPlayerViewManager.h"
-#import "BrightcovePlayerIMA.h"
+#import "BrightcoveIMAPlayerView.h"
 #import <React/RCTUIManager.h>
 
 @implementation BrightcoveIMAPlayerViewManager
@@ -9,7 +9,7 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 
 - (UIView *)view {
-    return [[BrightcovePlayerIMA alloc] init];
+    return [[BrightcoveIMAPlayerView alloc] init];
 }
 
 - (dispatch_queue_t)methodQueue {
@@ -38,7 +38,7 @@ RCT_EXPORT_VIEW_PROPERTY(onUpdateBufferProgress, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onEnterFullscreen, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onExitFullscreen, RCTDirectEventBlock);
 
-RCT_CUSTOM_VIEW_PROPERTY(settings, NSDictionary, BrightcovePlayerIMA) {
+RCT_CUSTOM_VIEW_PROPERTY(settings, NSDictionary, BrightcoveIMAPlayerView) {
     if ([json isKindOfClass:[NSDictionary class]]) {
         [view setupWithSettings:json];
     }
@@ -46,8 +46,8 @@ RCT_CUSTOM_VIEW_PROPERTY(settings, NSDictionary, BrightcovePlayerIMA) {
 
 RCT_EXPORT_METHOD(toggleFullscreen:(nonnull NSNumber *)reactTag isFullscreen:(BOOL)isFullscreen) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        BrightcovePlayerIMA *player = (BrightcovePlayerIMA*)viewRegistry[reactTag];
-        if ([player isKindOfClass:[BrightcovePlayerIMA class]]) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player toggleFullscreen:isFullscreen];
         }
     }];
@@ -55,8 +55,8 @@ RCT_EXPORT_METHOD(toggleFullscreen:(nonnull NSNumber *)reactTag isFullscreen:(BO
 
 RCT_EXPORT_METHOD(seekTo:(nonnull NSNumber *)reactTag seconds:(nonnull NSNumber *)seconds) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        BrightcovePlayerIMA *player = (BrightcovePlayerIMA*)viewRegistry[reactTag];
-        if ([player isKindOfClass:[BrightcovePlayerIMA class]]) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player seekTo:seconds];
         }
     }];
@@ -64,8 +64,8 @@ RCT_EXPORT_METHOD(seekTo:(nonnull NSNumber *)reactTag seconds:(nonnull NSNumber 
 
 RCT_EXPORT_METHOD(play:(nonnull NSNumber *)reactTag) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        BrightcovePlayerIMA *player = (BrightcovePlayerIMA*)viewRegistry[reactTag];
-        if ([player isKindOfClass:[BrightcovePlayerIMA class]]) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player play];
         }
     }];
@@ -73,8 +73,8 @@ RCT_EXPORT_METHOD(play:(nonnull NSNumber *)reactTag) {
 
 RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        BrightcovePlayerIMA *player = (BrightcovePlayerIMA*)viewRegistry[reactTag];
-        if ([player isKindOfClass:[BrightcovePlayerIMA class]]) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player pause];
         }
     }];
@@ -82,8 +82,8 @@ RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
 
 RCT_EXPORT_METHOD(dispose:(nonnull NSNumber *)reactTag) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        BrightcovePlayerIMA *player = (BrightcovePlayerIMA*)viewRegistry[reactTag];
-        if ([player isKindOfClass:[BrightcovePlayerIMA class]]) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player dispose];
         }
     }];
