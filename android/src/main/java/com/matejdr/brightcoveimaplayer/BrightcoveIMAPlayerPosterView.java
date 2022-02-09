@@ -61,6 +61,9 @@ public class BrightcoveIMAPlayerPosterView extends RelativeLayout implements Lif
   }
 
   private void loadPoster() {
+    if (this.accountId == null || this.policyKey == null) {
+      return;
+    }
     VideoListener listener = new VideoListener() {
       @Override
       public void onVideo(Video video) {

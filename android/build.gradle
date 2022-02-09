@@ -9,7 +9,7 @@ buildscript {
         }
 
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.5.3'
+            classpath 'com.android.tools.build:gradle:4.1.1'
         }
     }
 }
@@ -23,7 +23,7 @@ def safeExtGet(prop, fallback) {
 android {
     compileSdkVersion safeExtGet('BrightcoveImaPlayer_compileSdkVersion', 29)
     defaultConfig {
-        minSdkVersion safeExtGet('BrightcoveImaPlayer_minSdkVersion', 16)
+        minSdkVersion safeExtGet('BrightcoveImaPlayer_minSdkVersion', 19)
         targetSdkVersion safeExtGet('BrightcoveImaPlayer_targetSdkVersion', 29)
         versionCode 1
         versionName "1.0"

@@ -53,7 +53,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private final String TAG = this.getClass().getSimpleName();
   private final ThemedReactContext context;
   private final ReactApplicationContext applicationContext;
-  private BrightcoveExoPlayerVideoView playerVideoView;
+  private BrightcoveExoPlayerVideoView brightcoveVideoView;
   private BrightcoveMediaController mediaController;
   private ReadableMap settings;
   private String policyKey;
@@ -65,7 +65,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
   private float playbackRate = 1;
-  private float lastAdPosition = -1;
   private EventEmitter eventEmitter;
   private GoogleIMAComponent googleIMAComponent;
 
@@ -81,25 +80,25 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   private void setup() {
-    this.playerVideoView = new BrightcoveExoPlayerVideoView(this.context);
+    this.brightcoveVideoView = new BrightcoveExoPlayerVideoView(this.context);
 
-    this.addView(this.playerVideoView);
-    this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-    this.playerVideoView.finishInitialization();
+    this.addView(this.brightcoveVideoView);
+    this.brightcoveVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    this.brightcoveVideoView.finishInitialization();
 
     this.requestLayout();
 
-    this.fullScreenHandler = new FullScreenHandler(context, this.playerVideoView, this);
-    this.mediaController = this.fullScreenHandler.initMediaController(this.playerVideoView);
+    this.fullScreenHandler = new FullScreenHandler(context, this.brightcoveVideoView, this);
+    this.mediaController = this.fullScreenHandler.initMediaController(this.brightcoveVideoView);
 
     setupLayoutHack();
 
     ViewCompat.setTranslationZ(this, 9999);
 
     // *** This method call is optional *** //
-    setupAdMarkers(this.playerVideoView);
+    setupAdMarkers(this.brightcoveVideoView);
 
-    eventEmitter = this.playerVideoView.getEventEmitter();
+    eventEmitter = this.brightcoveVideoView.getEventEmitter();
 
     // Use a procedural abstraction to setup the Google IMA SDK via the plugin.
     setupGoogleIMA();
@@ -222,9 +221,9 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void setPlay(boolean play) {
     if (this.playing == play) return;
     if (play) {
-      this.playerVideoView.start();
+      this.brightcoveVideoView.start();
     } else {
-      this.playerVideoView.pause();
+      this.brightcoveVideoView.pause();
     }
   }
 
@@ -236,10 +235,10 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void setFullscreen(boolean fullscreen) {
     if (fullscreen) {
       this.fullScreenHandler.openFullscreenDialog();
-      this.playerVideoView.getEventEmitter().emit(EventType.ENTER_FULL_SCREEN);
+      this.brightcoveVideoView.getEventEmitter().emit(EventType.ENTER_FULL_SCREEN);
     } else {
       this.fullScreenHandler.closeFullscreenDialog();
-      this.playerVideoView.getEventEmitter().emit(EventType.EXIT_FULL_SCREEN);
+      this.brightcoveVideoView.getEventEmitter().emit(EventType.EXIT_FULL_SCREEN);
     }
 //        this.mediaController.show();
 //        WritableMap event = Arguments.createMap();
@@ -259,7 +258,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void setVolume(float volume) {
     Map<String, Object> details = new HashMap<>();
     details.put(Event.VOLUME, volume);
-    this.playerVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
+    this.brightcoveVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
   }
 
   /**/
@@ -280,40 +279,40 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   public void seekTo(int time) {
-    this.playerVideoView.seekTo(time);
+    this.brightcoveVideoView.seekTo(time);
   }
 
   //We need to stop the player to avoid a potential memory leak.
   public void stopPlayback() {
-    if (this.playerVideoView != null) {
-      this.playerVideoView.stopPlayback();
+    if (this.brightcoveVideoView != null) {
+      this.brightcoveVideoView.stopPlayback();
     }
   }
 
   public void pause() {
-    if (this.playerVideoView != null) {
-//            if (this.adsPlaying && this.googleIMAComponent != null) {
-//                this.googleIMAComponent.getVideoAdPlayer().pauseAd();
-//            }
-      this.playerVideoView.pause();
+    if (this.brightcoveVideoView != null) {
+      if (this.adsPlaying && this.googleIMAComponent != null) {
+        this.googleIMAComponent.getVideoAdPlayer().pauseAd();
+      }
+      this.brightcoveVideoView.pause();
     }
   }
 
   public void play() {
-    if (this.playerVideoView != null) {
+    if (this.brightcoveVideoView != null) {
 //            if (this.adsPlaying && this.googleIMAComponent != null) {
 //                this.googleIMAComponent.getVideoAdPlayer().resumeAd();
 //                this.playerVideoView.pause();
 //            } else {
 //                this.playerVideoView.start();
 //            }
-      this.playerVideoView.start();
+      this.brightcoveVideoView.start();
     }
   }
 
   private void updateBitRate() {
     if (this.bitRate == 0) return;
-    ExoPlayerVideoDisplayComponent videoDisplay = ((ExoPlayerVideoDisplayComponent) this.playerVideoView.getVideoDisplay());
+    ExoPlayerVideoDisplayComponent videoDisplay = ((ExoPlayerVideoDisplayComponent) this.brightcoveVideoView.getVideoDisplay());
     ExoPlayer player = videoDisplay.getExoPlayer();
     DefaultTrackSelector trackSelector = videoDisplay.getTrackSelector();
     if (player == null) return;
@@ -325,13 +324,16 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   private void updatePlaybackRate() {
-    ExoPlayer expPlayer = ((ExoPlayerVideoDisplayComponent) this.playerVideoView.getVideoDisplay()).getExoPlayer();
+    ExoPlayer expPlayer = ((ExoPlayerVideoDisplayComponent) this.brightcoveVideoView.getVideoDisplay()).getExoPlayer();
     if (expPlayer != null) {
       expPlayer.setPlaybackParameters(new PlaybackParameters(playbackRate, 1f));
     }
   }
 
   private void loadVideo() {
+    if (this.accountId == null || this.policyKey == null) {
+      return;
+    }
     Catalog catalog = new Catalog.Builder(eventEmitter, this.accountId)
       .setPolicy(this.policyKey)
       .build();
@@ -352,17 +354,17 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   private void playVideo(Video video) {
-    BrightcoveIMAPlayerView.this.playerVideoView.clear();
-    BrightcoveIMAPlayerView.this.playerVideoView.add(video);
+    BrightcoveIMAPlayerView.this.brightcoveVideoView.clear();
+    BrightcoveIMAPlayerView.this.brightcoveVideoView.add(video);
     if (BrightcoveIMAPlayerView.this.autoPlay) {
-      BrightcoveIMAPlayerView.this.playerVideoView.start();
+      BrightcoveIMAPlayerView.this.brightcoveVideoView.start();
     }
   }
 
   private void fixVideoLayout() {
     int viewWidth = this.getMeasuredWidth();
     int viewHeight = this.getMeasuredHeight();
-    SurfaceView surfaceView = (SurfaceView) this.playerVideoView.getRenderView();
+    SurfaceView surfaceView = (SurfaceView) this.brightcoveVideoView.getRenderView();
     surfaceView.measure(viewWidth, viewHeight);
     int surfaceWidth = surfaceView.getMeasuredWidth();
     int surfaceHeight = surfaceView.getMeasuredHeight();
@@ -377,7 +379,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
    */
   private void setupAdMarkers(BaseVideoView videoView) {
 //        final BrightcoveMediaController mediaController = new BrightcoveMediaController(this.playerVideoView);
-    final BrightcoveMediaController mediaController = this.playerVideoView.getBrightcoveMediaController();
+    final BrightcoveMediaController mediaController = this.brightcoveVideoView.getBrightcoveMediaController();
 
     // Add "Ad Markers" where the Ads Manager says ads will appear.
     mediaController.addListener(GoogleIMAEventType.ADS_MANAGER_LOADED, event -> {
@@ -402,69 +404,20 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     // Establish the Google IMA SDK factory instance.
     final ImaSdkFactory sdkFactory = ImaSdkFactory.getInstance();
 
-    // TODO(matej): review this
     // Enable logging up ad start.
     eventEmitter.on(EventType.AD_STARTED, event -> {
       adsPlaying = true;
-//        if (lastAdPosition > 0) {
-//          googleIMAComponent.setAdPosition((int) (lastAdPosition * 1000));
-//          lastAdPosition = -1;
-//        }
     });
     // Enable logging any failed attempts to play an ad.
     eventEmitter.on(GoogleIMAEventType.DID_FAIL_TO_PLAY_AD, event -> adsPlaying = false);
     // Enable Logging upon ad completion.
     eventEmitter.on(EventType.AD_COMPLETED, event -> {
-//      adsPlaying = false;
-//      lastAdPosition = -1;
+      adsPlaying = false;
     });
     // Enable Logging upon ad break completion.
     eventEmitter.on(EventType.AD_BREAK_COMPLETED, event -> {
-//      adsPlaying = false;
-//      lastAdPosition = -1;
+      adsPlaying = false;
     });
-    // Enable Logging upon ad progress.
-    eventEmitter.on(EventType.AD_BREAK_STARTED, event -> {
-      if (playing) {
-        playerVideoView.pause();
-      }
-    });
-    // Enable Logging upon ad progress.
-    eventEmitter.on(EventType.AD_PAUSED, event -> {
-//        if (googleIMAComponent != null) {
-//          lastAdPosition = googleIMAComponent.getVideoAdPlayer().getAdProgress().getCurrentTime();
-//        }
-    });
-    // Enable Logging upon ad progress.
-    eventEmitter.on(EventType.AD_RESUMED, event -> {
-//        if (lastAdPosition > 0 && googleIMAComponent != null) {
-//          googleIMAComponent.setAdPosition((int) (lastAdPosition * 1000));
-//          lastAdPosition = -1;
-//        }
-    });
-    // Enable Logging upon ad progress.
-    eventEmitter.on(EventType.AD_PROGRESS, event -> {
-//        if (googleIMAComponent != null) {
-//          float currentTime = googleIMAComponent.getVideoAdPlayer().getAdProgress().getCurrentTime();
-//          if (currentTime > lastAdPosition) {
-//            lastAdPosition = currentTime;
-//          } else if (currentTime <= 0 && lastAdPosition > 0 && adsPlaying) {
-//            googleIMAComponent.setAdPosition((int) (lastAdPosition * 1000));
-//            lastAdPosition = -1;
-//            googleIMAComponent.getVideoAdPlayer().resumeAd();
-//          }
-//        }
-
-//        if (playing) {
-//          playerVideoView.pause();
-//        }
-    });
-//        eventEmitter.on(EventType.ANY, new EventListener() {
-//            @Override
-//            public void processEvent(Event event) {
-//                Log.v(TAG + " matej", event.getType());
-//            }
-//        });
 
     // Set up a listener for initializing AdsRequests. The Google
     // IMA plugin emits an ad request event as a result of
@@ -488,7 +441,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
     // Create the Brightcove IMA Plugin and pass in the event
     // emitter so that the plugin can integrate with the SDK.
-    googleIMAComponent = new GoogleIMAComponent.Builder(this.playerVideoView, eventEmitter)
+    googleIMAComponent = new GoogleIMAComponent.Builder(this.brightcoveVideoView, eventEmitter)
       .setUseAdRules(true)
       .setLoadVideoTimeout(adVideoLoadTimeout)
       .build();
@@ -504,24 +457,24 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
   @Override
   public void onHostResume() {
-//        if (this.adsPlaying && this.googleIMAComponent != null) {
-//            this.googleIMAComponent.getVideoAdPlayer().resumeAd();
-//            this.playerVideoView.pause();
-//        } else
-    if (this.playing && this.playerVideoView != null) {
-      this.playerVideoView.start();
+    if (this.adsPlaying && this.googleIMAComponent != null && googleIMAComponent.getVideoAdPlayer() != null) {
+      this.googleIMAComponent.getVideoAdPlayer().playAd();
+    } else if (this.playing && this.brightcoveVideoView != null) {
+      this.brightcoveVideoView.start();
     }
   }
 
   @Override
   public void onHostPause() {
-    this.pause();
+    if (this.adsPlaying && this.googleIMAComponent != null && googleIMAComponent.getVideoAdPlayer() != null) {
+      googleIMAComponent.getVideoAdPlayer().pause();
+    }
   }
 
   @Override
   public void onHostDestroy() {
-    this.playerVideoView.destroyDrawingCache();
-    this.playerVideoView.clear();
+    this.brightcoveVideoView.destroyDrawingCache();
+    this.brightcoveVideoView.clear();
     this.removeAllViews();
     this.applicationContext.removeLifecycleEventListener(this);
   }
