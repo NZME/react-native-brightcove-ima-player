@@ -249,6 +249,15 @@
     }
 }
 
+-(void) stopPlayback {
+    if (self.playbackController) {
+        if (_adsPlaying) {
+            [self.playbackController pauseAd];
+        }
+        [self.playbackController pause];
+    }
+}
+
 -(void)dispose {
     [self.playbackController setVideos:@[]];
     self.playbackController = nil;

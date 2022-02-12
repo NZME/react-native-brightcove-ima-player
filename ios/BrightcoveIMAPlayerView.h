@@ -51,6 +51,7 @@
 -(void) toggleFullscreen:(BOOL)isFullscreen;
 -(void) pause;
 -(void) play;
+-(void) stopPlayback;
 -(void) dispose;
 
 @end
