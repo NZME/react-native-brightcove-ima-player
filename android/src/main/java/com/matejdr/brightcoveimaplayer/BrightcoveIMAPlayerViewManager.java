@@ -82,8 +82,8 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   }
 
   @ReactProp(name = "disableDefaultControl")
-  public void setDefaultControlDisabled(BrightcoveIMAPlayerView view, boolean disableDefaultControl) {
-    view.setDefaultControlDisabled(disableDefaultControl);
+  public void setDisableDefaultControl(BrightcoveIMAPlayerView view, boolean disableDefaultControl) {
+    view.setDisableDefaultControl(disableDefaultControl);
   }
 
   @ReactProp(name = "volume")

@@ -37,6 +37,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.google.ads.interactivemedia.v3.api.AdsManager;
 import com.google.ads.interactivemedia.v3.api.AdsRequest;
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
+import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -62,6 +63,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean autoPlay = true;
   private boolean playing = false;
   private boolean adsPlaying = false;
+  private boolean disableDefaultControl = false;
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
   private float playbackRate = 1;
@@ -159,6 +161,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       @Override
       public void processEvent(Event e) {
         mediaController.show();
+        mediaController.setShowHideTimeout(4000);
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_ENTER_FULLSCREEN, event);
@@ -167,7 +170,13 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     eventEmitter.on(EventType.EXIT_FULL_SCREEN, new EventListener() {
       @Override
       public void processEvent(Event e) {
-        mediaController.show();
+        if (disableDefaultControl) {
+          mediaController.hide();
+          mediaController.setShowHideTimeout(1);
+        } else {
+          mediaController.show();
+          mediaController.setShowHideTimeout(4000);
+        }
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_EXIT_FULLSCREEN, event);
@@ -197,6 +206,9 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
   public void setSettings(ReadableMap settings) {
     this.settings = settings;
+    if (settings != null && settings.hasKey("autoPlay")) {
+      this.autoPlay = settings.getBoolean("autoPlay");
+    }
   }
 
   public void setPolicyKey(String policyKey) {
@@ -227,9 +239,15 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     }
   }
 
-  public void setDefaultControlDisabled(boolean disabled) {
-    this.mediaController.hide();
-    this.mediaController.setShowHideTimeout(disabled ? 1 : 4000);
+  public void setDisableDefaultControl(boolean disabled) {
+    this.disableDefaultControl = disabled;
+    if (disabled) {
+      this.mediaController.hide();
+      this.mediaController.setShowHideTimeout(1);
+    } else {
+      this.mediaController.show();
+      this.mediaController.setShowHideTimeout(4000);
+    }
   }
 
   public void setFullscreen(boolean fullscreen) {
@@ -434,11 +452,18 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       eventEmitter.respond(event);
     });
 
+    final ImaSdkSettings imaSdkSettings = sdkFactory.createImaSdkSettings();
+    imaSdkSettings.setLanguage("en");
+    if (settings != null && settings.hasKey("publisherProvidedID")) {
+      imaSdkSettings.setPpid(settings.getString("publisherProvidedID"));
+    }
+
     // Create the Brightcove IMA Plugin and pass in the event
     // emitter so that the plugin can integrate with the SDK.
     googleIMAComponent = new GoogleIMAComponent.Builder(this.brightcoveVideoView, eventEmitter)
       .setUseAdRules(true)
       .setLoadVideoTimeout(adVideoLoadTimeout)
+      .setImaSdkSettings(imaSdkSettings)
       .build();
   }
 

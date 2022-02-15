@@ -16,9 +16,9 @@ const LINKING_ERROR =
 
 type TBrightcoveIMAPlayerSettings = {
   IMAUrl: string;
-  autoAdvance?: boolean;
+  autoAdvance?: boolean; // iOS only
   autoPlay?: boolean;
-  allowsExternalPlayback?: boolean;
+  allowsExternalPlayback?: boolean; // iOS only
   publisherProvidedID?: string;
 };
 
