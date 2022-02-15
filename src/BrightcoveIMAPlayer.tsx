@@ -5,6 +5,7 @@ import {
   Platform,
   ViewProps,
   findNodeHandle,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -19,6 +20,22 @@ type TBrightcoveIMAPlayerSettings = {
   autoPlay?: boolean;
   allowsExternalPlayback?: boolean;
   publisherProvidedID?: string;
+};
+
+type TBrightcoveIMAPlayerEventBase = {
+  target: number;
+};
+
+type TBrightcoveIMAPlayerEventProgress = TBrightcoveIMAPlayerEventBase & {
+  currentTime: number;
+};
+
+type TBrightcoveIMAPlayerEventDuration = TBrightcoveIMAPlayerEventBase & {
+  duration: number;
+};
+
+type TBrightcoveIMAPlayerEventBuffer = TBrightcoveIMAPlayerEventBase & {
+  bufferProgress: number;
 };
 
 type BrightcoveIMAPlayerProps = ViewProps & {
@@ -37,15 +54,29 @@ type BrightcoveIMAPlayerProps = ViewProps & {
    */
   adVideoLoadTimeout?: number;
   playbackRate?: number;
-  onReady?: () => {};
-  onPlay?: () => {};
-  onPause?: () => {};
-  onEnd?: () => {};
-  onProgress?: () => {};
-  onChangeDuration?: () => {};
-  onUpdateBufferProgress?: () => {};
-  onEnterFullscreen?: () => {};
-  onExitFullscreen?: () => {};
+  onReady?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
+  onPlay?: (event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>) => void;
+  onPause?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
+  onEnd?: (event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>) => void;
+  onProgress?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventProgress>
+  ) => void;
+  onChangeDuration?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventDuration>
+  ) => void;
+  onUpdateBufferProgress?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBuffer>
+  ) => void;
+  onEnterFullscreen?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
+  onExitFullscreen?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
 };
 
 const ComponentName = 'BrightcoveIMAPlayerView';
