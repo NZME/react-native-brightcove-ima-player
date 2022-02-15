@@ -161,7 +161,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         mediaController.show();
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_ENTER_FULLSCREEN, event);
       }
     });
     eventEmitter.on(EventType.EXIT_FULL_SCREEN, new EventListener() {
@@ -170,7 +170,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         mediaController.show();
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_EXIT_FULLSCREEN, event);
       }
     });
     eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, new EventListener() {
@@ -240,11 +240,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       this.fullScreenHandler.closeFullscreenDialog();
       this.brightcoveVideoView.getEventEmitter().emit(EventType.EXIT_FULL_SCREEN);
     }
-//        this.mediaController.show();
-//        WritableMap event = Arguments.createMap();
-//        event.putBoolean("fullscreen", fullscreen);
-//        ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
-//        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
   }
 
   public void toggleFullscreen(boolean isFullscreen) {
