@@ -44,6 +44,9 @@
     [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
 
     _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:nil options:options controlsView:control];
+    if (_disableDefaultControl == true) {
+        _playerView.controlsView.hidden = true;
+    }
     _playerView.delegate = self;
     _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _playerView.backgroundColor = UIColor.blackColor;
@@ -213,6 +216,7 @@
 }
 
 - (void)setDisableDefaultControl:(BOOL)disable {
+    _disableDefaultControl = disable;
     _playerView.controlsView.hidden = disable;
 }
 
@@ -385,10 +389,18 @@
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
+        // if controls are disabled, disable player controlls on normal mode
+        if (_disableDefaultControl == true) {
+            _playerView.controlsView.hidden = true;
+        }
         if (self.onExitFullscreen) {
             self.onExitFullscreen(@{});
         }
     } else if (screenMode == BCOVPUIScreenModeFull) {
+        // enable player controlls on fullscreen mode
+        if (_disableDefaultControl == true) {
+            _playerView.controlsView.hidden = false;
+        }
         if (self.onEnterFullscreen) {
             self.onEnterFullscreen(@{});
         }

@@ -24,6 +24,7 @@
 @property (nonatomic) BOOL playing;
 @property (nonatomic) BOOL adsPlaying;
 @property (nonatomic) BOOL autoPlay;
+@property (nonatomic) BOOL disableDefaultControl;
 @property (nonatomic) float lastBufferProgress;
 @property (nonatomic) float targetVolume;
 @property (nonatomic) float targetBitRate;

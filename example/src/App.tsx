@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, ScrollView } from 'react-native';
 import {
   BrightcoveIMAPlayer,
   BrightcoveIMAPlayerPoster,
@@ -25,17 +25,40 @@ const gam_video_url =
 
 export default function App() {
   const videoPlayer = React.useRef<BrightcoveIMAPlayer>(null);
+  const videoPlayerControlls = React.useRef<BrightcoveIMAPlayer>(null);
 
-  function stopPlayback() {
+  const stopPlayback = () => {
     videoPlayer?.current?.stopPlayback();
-  }
+  };
+
+  const play = () => {
+    videoPlayerControlls?.current?.play();
+  };
+
+  const pause = () => {
+    videoPlayerControlls?.current?.pause();
+  };
+
+  const seekTo = () => {
+    videoPlayerControlls?.current?.seekTo(5);
+  };
+
+  const fullscreen = () => {
+    videoPlayerControlls?.current?.toggleFullscreen(true);
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.containerContent}
+    >
       <View>
-        <Text>Brightcove IMA Player Demo</Text>
+        <Text style={styles.headline}>Brightcove IMA Player Demo</Text>
       </View>
       <View style={styles.posterBg}>
+        <View>
+          <Text>Poster demo</Text>
+        </View>
         <BrightcoveIMAPlayerPoster
           style={styles.poster}
           accountId={accountId}
@@ -44,6 +67,9 @@ export default function App() {
         />
       </View>
       <View style={styles.videoBg}>
+        <View>
+          <Text>Player demo</Text>
+        </View>
         <BrightcoveIMAPlayer
           ref={videoPlayer}
           style={styles.video}
@@ -54,20 +80,52 @@ export default function App() {
           settings={{
             IMAUrl: gam_video_url,
             autoAdvance: false,
-            autoPlay: true, // initial autoPlay prop
+            autoPlay: false, // initial autoPlay prop
             allowsExternalPlayback: true,
             publisherProvidedID: 'insertyourpidhere',
           }}
         />
       </View>
       <Button title={'Stop Playback'} onPress={stopPlayback} />
-    </View>
+      <View style={styles.videoBg}>
+        <View>
+          <Text>Player controls demo</Text>
+        </View>
+        <BrightcoveIMAPlayer
+          disableDefaultControl={true}
+          ref={videoPlayerControlls}
+          style={styles.video}
+          accountId={accountId}
+          policyKey={policyKey}
+          videoId={videoId}
+          // autoPlay={true}
+          settings={{
+            IMAUrl: gam_video_url,
+            autoAdvance: false,
+            autoPlay: false, // initial autoPlay prop
+            allowsExternalPlayback: true,
+            publisherProvidedID: 'insertyourpidhere',
+          }}
+        />
+      </View>
+      <Button title={'Play'} onPress={play} />
+      <Button title={'Pause'} onPress={pause} />
+      <Button title={'Seek to 5s'} onPress={seekTo} />
+      <Button title={'Full screen'} onPress={fullscreen} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  containerContent: {
+    paddingVertical: 40,
+  },
+  headline: {
+    fontSize: 24,
+    padding: 10,
   },
   posterBg: {
     backgroundColor: '#b8b8b8',
