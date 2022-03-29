@@ -71,6 +71,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private GoogleIMAComponent googleIMAComponent;
 
   private FullScreenHandler fullScreenHandler;
+  private int controlbarTimeout = 4000;
 
   public BrightcoveIMAPlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
     super(context);
@@ -161,7 +162,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       @Override
       public void processEvent(Event e) {
         mediaController.show();
-        mediaController.setShowHideTimeout(4000);
+        mediaController.setShowHideTimeout(controlbarTimeout);
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_ENTER_FULLSCREEN, event);
@@ -175,7 +176,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
           mediaController.setShowHideTimeout(1);
         } else {
           mediaController.show();
-          mediaController.setShowHideTimeout(4000);
+          mediaController.setShowHideTimeout(controlbarTimeout);
         }
         WritableMap event = Arguments.createMap();
         ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
@@ -246,7 +247,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       this.mediaController.setShowHideTimeout(1);
     } else {
       this.mediaController.show();
-      this.mediaController.setShowHideTimeout(4000);
+      this.mediaController.setShowHideTimeout(controlbarTimeout);
     }
   }
 
@@ -299,6 +300,11 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void stopPlayback() {
     if (this.brightcoveVideoView != null) {
       this.brightcoveVideoView.stopPlayback();
+
+      this.brightcoveVideoView.destroyDrawingCache();
+      this.brightcoveVideoView.clear();
+      this.removeAllViews();
+      this.applicationContext.removeLifecycleEventListener(this);
     }
   }
 
