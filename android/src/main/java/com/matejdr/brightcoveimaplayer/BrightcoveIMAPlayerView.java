@@ -275,7 +275,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     this.brightcoveVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
   }
 
-  /**/
   public void setBitRate(int bitRate) {
     this.bitRate = bitRate;
     this.updateBitRate();
@@ -312,20 +311,20 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     if (this.brightcoveVideoView != null) {
       if (this.adsPlaying && this.googleIMAComponent != null) {
         this.googleIMAComponent.getVideoAdPlayer().pauseAd();
+      } else {
+        this.brightcoveVideoView.pause();
       }
-      this.brightcoveVideoView.pause();
     }
   }
 
   public void play() {
     if (this.brightcoveVideoView != null) {
-//            if (this.adsPlaying && this.googleIMAComponent != null) {
-//                this.googleIMAComponent.getVideoAdPlayer().resumeAd();
-//                this.playerVideoView.pause();
-//            } else {
-//                this.playerVideoView.start();
-//            }
-      this.brightcoveVideoView.start();
+      if (this.adsPlaying && this.googleIMAComponent != null) {
+        //this.brightcoveVideoView.pause();
+        this.googleIMAComponent.getVideoAdPlayer().resumeAd();
+      } else {
+        this.brightcoveVideoView.start();
+      }
     }
   }
 
@@ -397,7 +396,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     to the Brightcove Seek Bar.
    */
   private void setupAdMarkers(BaseVideoView videoView) {
-//        final BrightcoveMediaController mediaController = new BrightcoveMediaController(this.playerVideoView);
     final BrightcoveMediaController mediaController = this.brightcoveVideoView.getBrightcoveMediaController();
 
     // Add "Ad Markers" where the Ads Manager says ads will appear.
@@ -471,14 +469,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       .setLoadVideoTimeout(adVideoLoadTimeout)
       .setImaSdkSettings(imaSdkSettings)
       .build();
-  }
-
-
-  private void printKeys(Map<String, Object> map) {
-    Log.d("debug", "-----------");
-    for (Map.Entry<String, Object> entry : map.entrySet()) {
-      Log.d("debug", entry.getKey());
-    }
   }
 
   @Override
