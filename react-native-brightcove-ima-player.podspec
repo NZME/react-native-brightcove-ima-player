@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm}"
 
   s.dependency "React-Core"
-  s.dependency "Brightcove-Player-IMA", '6.10.2'
+  s.dependency "Brightcove-Player-IMA", '6.10.4'
   s.dependency 'Google-Mobile-Ads-SDK', '~> 8.11.0'
 end
