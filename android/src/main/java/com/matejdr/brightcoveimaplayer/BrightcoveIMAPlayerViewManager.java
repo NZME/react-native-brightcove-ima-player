@@ -22,6 +22,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public static final int COMMAND_PAUSE = 3;
   public static final int COMMAND_STOP_PLAYBACK = 4;
   public static final int COMMAND_TOGGLE_FULLSCREEN = 5;
+  public static final String AD_STARTED = "ad_started";
   public static final String EVENT_READY = "ready";
   public static final String EVENT_PLAY = "play";
   public static final String EVENT_PAUSE = "pause";
@@ -159,6 +160,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public @Nullable
   Map<String, Object> getExportedCustomDirectEventTypeConstants() {
     Map<String, Object> map = new HashMap<>();
+    map.put(AD_STARTED, (Object) MapBuilder.of("registrationName", "adStarted"));
     map.put(EVENT_READY, (Object) MapBuilder.of("registrationName", "onReady"));
     map.put(EVENT_PLAY, (Object) MapBuilder.of("registrationName", "onPlay"));
     map.put(EVENT_PAUSE, (Object) MapBuilder.of("registrationName", "onPause"));

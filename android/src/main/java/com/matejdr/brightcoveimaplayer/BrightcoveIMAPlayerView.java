@@ -106,6 +106,14 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     // Use a procedural abstraction to setup the Google IMA SDK via the plugin.
     setupGoogleIMA();
 
+    eventEmitter.on(EventType.AD_STARTED, new EventListener() {
+      @Override
+      public void processEvent(Event e) {
+        WritableMap event = Arguments.createMap();
+        ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.AD_STARTED, event);
+      }
+    });
     eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, new EventListener() {
       @Override
       public void processEvent(Event e) {

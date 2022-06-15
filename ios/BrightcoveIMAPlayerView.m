@@ -347,6 +347,9 @@
         switch (adEvent.type)
         {
             case kIMAAdEvent_STARTED:
+                if (self.adStarted) {
+                  self.adStarted(@{});
+                }
                 _adsPlaying = YES;
                 break;
             case kIMAAdEvent_COMPLETE:

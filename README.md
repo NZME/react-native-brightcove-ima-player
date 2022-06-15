@@ -73,6 +73,7 @@ import { BrightcoveIMAPlayer } from "react-native-brightcove-ima-player";
 | adVideoLoadTimeout     | number   | Set the amount of milliseconds for video to load. Default is `3000`                 |                              |
 | playbackRate           | number   | Set playback speed scale. Default is `1`                                            |                              |
 | disableDefaultControl  | boolean  | Disable default player control. Set `true` when you implement own video controller. |                              |
+| adStarted              | Function | Indicates the IMA ad has started                                              |                              |
 | onReady                | Function | Indicates the video can be played back                                              |                              |
 | onPlay                 | Function | Indicates the video playback starts                                                 |                              |
 | onPause                | Function | Indicates the video is paused                                                       |                              |
