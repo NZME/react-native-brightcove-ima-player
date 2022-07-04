@@ -33,12 +33,11 @@
 }
 
 - (void)setupWithSettings:(NSDictionary*)settings {
-    /* added */
     BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
     options.jumpBackInterval = 999;
     [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
     options.presentingViewController = RCTPresentedViewController();
-    
+    options.automaticControlTypeSelection = YES;
     BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
     [control.progressSlider setTrackHeight:2];
     [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
@@ -74,7 +73,6 @@
 
     NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
     BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
-//    NSLog(@"ViewController Debug - IMAUrl: %@", IMAUrl);
     
     NSDictionary *imaPlaybackSessionOptions = @{ kBCOVIMAOptionIMAPlaybackSessionDelegateKey: self };
     
@@ -107,6 +105,8 @@
 
     _targetVolume = 1.0;
     _autoPlay = autoPlay;
+    // default is in view
+    _inViewPort = YES;
 }
 
 - (void)setupService {
@@ -233,6 +233,14 @@
     }
 }
 
+-(void) toggleInViewPort:(BOOL)inViewPort {
+    if (inViewPort) {
+        _inViewPort = YES;
+    } else {
+        _inViewPort = NO;
+    }
+}
+
 -(void) pause {
     if (self.playbackController) {
         if (_adsPlaying) {
@@ -268,25 +276,30 @@
 }
 
 - (void)handleAppStateDidChange:(NSNotification *)notification
-{
+{    
+    if ([notification.name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
+        [self toggleInViewPort:NO];
+        [self pause];
+    }
+    
     if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
-//        NSLog(@"ViewController Debug - handleAppStateDidChange %@", notification.name);
-        if (_adsPlaying) {
-            [self.playbackController resumeAd];
-        }
+        [self toggleInViewPort:YES];
+        [self pause];
     }
 }
 
 #pragma mark - BCOVPlaybackControllerBasicDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
-//    NSLog(@"ViewController Debug - lifecycleEvent %@", lifecycleEvent);
-    if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
+        
+    if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty ||
+        lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
         _playbackSession = nil;
         return;
     }
+    
     _playbackSession = session;
     if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
         [self refreshVolume];
@@ -294,9 +307,10 @@
         if (self.onReady) {
             self.onReady(@{});
         }
-        if (_autoPlay) {
-            [_playbackController play];
-        }
+        // disabling this due to video blip before pre-roll
+//        if (_autoPlay) {
+//            [_playbackController play];
+//        }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
         _playing = true;
         [self refreshPlaybackRate];
@@ -318,38 +332,24 @@
         if (self.onPause) {
             self.onPause(@{});
         }
-    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd) {
-//        if (self.onEnd) {
-//            self.onEnd(@{});
-//        }
-    }
-
-    NSString *type = lifecycleEvent.eventType;
-
-    if ([type isEqualToString:kBCOVIMALifecycleEventAdsLoaderLoaded])
-    {
-//        NSLog(@"ViewController Debug - Ads loaded.");
-        // When ads load successfully, the kBCOVIMALifecycleEventAdsLoaderLoaded lifecycle event
-//        // returns an NSDictionary containing a reference to the IMAAdsManager.
-//        IMAAdsManager *adsManager = lifecycleEvent.properties[kBCOVIMALifecycleEventPropertyKeyAdsManager];
-//        if (adsManager != nil)
-//        {
-//            // Lower the volume of ads by half.
-//            adsManager.volume = adsManager.volume / 2.0;
-//            NSLog (@"ViewController Debug - IMAAdsManager.volume set to %0.1f.", adsManager.volume);
-//        }
-    }
-    else if ([type isEqualToString:kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent])
-    {
+    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdProgress) {
+        // catches scroll away before ads start bug
+        if (!_inViewPort) {
+            [self.playbackController pauseAd];
+        }
+    } else if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent) {
         IMAAdEvent *adEvent = lifecycleEvent.properties[@"adEvent"];
-//        NSLog(@"ViewController Debug - adEvent %@", adEvent);
-        
+                
         switch (adEvent.type)
         {
+            case kIMAAdEvent_LOADED:
+                break;
+            case kIMAAdEvent_PAUSE:
+                break;
+            case kIMAAdEvent_RESUME:
+                _adsPlaying = YES;
+                break;
             case kIMAAdEvent_STARTED:
-                if (self.adStarted) {
-                  self.adStarted(@{});
-                }
                 _adsPlaying = YES;
                 break;
             case kIMAAdEvent_COMPLETE:
@@ -392,7 +392,7 @@
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
-        // if controls are disabled, disable player controlls on normal mode
+        // if controls are disabled, disable player controls on normal mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = true;
         }
@@ -400,7 +400,7 @@
             self.onExitFullscreen(@{});
         }
     } else if (screenMode == BCOVPUIScreenModeFull) {
-        // enable player controlls on fullscreen mode
+        // enable player controls on fullscreen mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = false;
         }
@@ -413,27 +413,32 @@
 #pragma mark - BCOVPlaybackControllerAdsDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
-//    NSLog(@"ViewController Debug - didExitAdSequence: %@", adSequence);
+    if (!_inViewPort && _adsPlaying) {
+        [self.playbackController pauseAd];
+    }
     [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
-//    NSLog(@"ViewController Debug - didExitAdSequence: %@", adSequence);
-    [self.playbackController play];
+    if (_inViewPort) {
+        [self.playbackController play];
+    }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
-//    NSLog(@"ViewController Debug - didEnterAd: %@", ad);
+    if (!_inViewPort && _adsPlaying) {
+        [self.playbackController pauseAd];
+    }
     [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAd:(BCOVAd *)ad {
-//    NSLog(@"ViewController Debug - didExitAd: %@", ad);
-    [self.playbackController play];
+    if (_inViewPort) {
+        [self.playbackController play];
+    }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session ad:(BCOVAd *)ad didProgressTo:(NSTimeInterval)progress {
-//    NSLog(@"ViewController Debug - didProgressTo: %f", progress);
     if (_playing) {
         [self.playbackController pause];
     }
@@ -444,8 +449,8 @@
 - (void)willCallIMAAdsLoaderRequestAdsWithRequest:(IMAAdsRequest *)adsRequest forPosition:(NSTimeInterval)position
 {
     // for demo purposes, increase the VAST ad load timeout.
-//    adsRequest.vastLoadTimeout = 3000.;
-//    NSLog(@"ViewController Debug - IMAAdsRequest.vastLoadTimeout set to %.1f milliseconds.", adsRequest.vastLoadTimeout);
+    //    adsRequest.vastLoadTimeout = 3000.;
+    //NSLog(@"BC - DEBUG - IMAAdsRequest.vastLoadTimeout set to %.1f milliseconds.", adsRequest.vastLoadTimeout);
 }
 
 #pragma mark - IMALinkOpenerDelegate Methods

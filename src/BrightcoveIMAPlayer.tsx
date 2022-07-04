@@ -120,6 +120,14 @@ export class BrightcoveIMAPlayer extends Component<BrightcoveIMAPlayerProps> {
     );
   };
 
+  toggleInViewPort = (inViewPort: boolean) => {
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      UIManager.getViewManagerConfig(ComponentName).Commands.toggleInViewPort,
+      [inViewPort]
+    );
+  };
+
   stopPlayback = () => {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this),

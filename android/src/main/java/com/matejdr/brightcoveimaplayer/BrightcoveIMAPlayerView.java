@@ -63,6 +63,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean autoPlay = true;
   private boolean playing = false;
   private boolean adsPlaying = false;
+  private boolean inViewPort = true;
   private boolean disableDefaultControl = false;
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
@@ -211,13 +212,15 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_UPDATE_BUFFER_PROGRESS, event);
       }
     });
+  
   }
 
   public void setSettings(ReadableMap settings) {
     this.settings = settings;
-    if (settings != null && settings.hasKey("autoPlay")) {
-      this.autoPlay = settings.getBoolean("autoPlay");
-    }
+    // disabling autoPlay coming from settings object
+    // if (settings != null && settings.hasKey("autoPlay")) {
+    //   this.autoPlay = settings.getBoolean("autoPlay");
+    // }
   }
 
   public void setPolicyKey(String policyKey) {
@@ -277,6 +280,16 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     }
   }
 
+  public void toggleInViewPort(boolean inViewPort) {
+    if (inViewPort) {
+      this.inViewPort = true;
+    } else {
+      this.inViewPort = false;
+      // need to pause here also - (differs from IOS behaviour)
+      this.pause();
+    }
+  }
+
   public void setVolume(float volume) {
     Map<String, Object> details = new HashMap<>();
     details.put(Event.VOLUME, volume);
@@ -319,7 +332,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     if (this.brightcoveVideoView != null) {
       if (this.adsPlaying && this.googleIMAComponent != null) {
         this.googleIMAComponent.getVideoAdPlayer().pauseAd();
-      } else {
+      } else if (this.playing) {
         this.brightcoveVideoView.pause();
       }
     }
@@ -328,7 +341,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void play() {
     if (this.brightcoveVideoView != null) {
       if (this.adsPlaying && this.googleIMAComponent != null) {
-        //this.brightcoveVideoView.pause();
         this.googleIMAComponent.getVideoAdPlayer().resumeAd();
       } else {
         this.brightcoveVideoView.start();
@@ -400,7 +412,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   /*
-    This methods show how to the the Google IMA AdsManager, get the cue points and add the markers
+    This methods show how to get the Google IMA AdsManager, get the cue points and add the markers
     to the Brightcove Seek Bar.
    */
   private void setupAdMarkers(BaseVideoView videoView) {
@@ -416,7 +428,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         // If cuepoint is negative it means it is a POST ROLL.
         int markerTime = cuepoint < 0 ? brightcoveSeekBar.getMax() : (int) (cuepoint * DateUtils.SECOND_IN_MILLIS);
         mediaController.getBrightcoveSeekBar().addMarker(markerTime);
-
       }
     });
     videoView.setMediaController(mediaController);
@@ -444,9 +455,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       adsPlaying = false;
     });
 
-    // Set up a listener for initializing AdsRequests. The Google
-    // IMA plugin emits an ad request event as a result of
-    // initializeAdsRequests() being called.
+    // Set up a listener for initializing AdsRequests. 
     eventEmitter.on(GoogleIMAEventType.ADS_REQUEST_FOR_VIDEO, event -> {
       String IMAUrl = settings != null && settings.hasKey("IMAUrl") ?
         settings.getString("IMAUrl") : "";
@@ -481,18 +490,16 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
   @Override
   public void onHostResume() {
-    if (this.adsPlaying && this.googleIMAComponent != null && googleIMAComponent.getVideoAdPlayer() != null) {
-      this.googleIMAComponent.getVideoAdPlayer().playAd();
-    } else if (this.playing && this.brightcoveVideoView != null) {
-      this.brightcoveVideoView.start();
-    }
+    // handleAppStateDidChange active
+    this.pause();
+    this.toggleInViewPort(true);
   }
 
   @Override
   public void onHostPause() {
-    if (this.adsPlaying && this.googleIMAComponent != null && googleIMAComponent.getVideoAdPlayer() != null) {
-      googleIMAComponent.getVideoAdPlayer().pause();
-    }
+    // handleAppStateDidChange background
+    this.pause();
+    this.toggleInViewPort(false);
   }
 
   @Override

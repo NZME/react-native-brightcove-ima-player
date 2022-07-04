@@ -22,6 +22,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public static final int COMMAND_PAUSE = 3;
   public static final int COMMAND_STOP_PLAYBACK = 4;
   public static final int COMMAND_TOGGLE_FULLSCREEN = 5;
+  public static final int COMMAND_TOGGLE_IN_VIEW_PORT = 6;
   public static final String AD_STARTED = "ad_started";
   public static final String EVENT_READY = "ready";
   public static final String EVENT_PLAY = "play";
@@ -124,7 +125,9 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
       "stopPlayback",
       COMMAND_STOP_PLAYBACK,
       "toggleFullscreen",
-      COMMAND_TOGGLE_FULLSCREEN
+      COMMAND_TOGGLE_FULLSCREEN,
+      "toggleInViewPort",
+      COMMAND_TOGGLE_IN_VIEW_PORT
     );
   }
 
@@ -151,6 +154,10 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
       }
       case COMMAND_TOGGLE_FULLSCREEN: {
         view.toggleFullscreen((boolean) (args.getBoolean(0)));
+        return;
+      }
+      case COMMAND_TOGGLE_IN_VIEW_PORT: {
+        view.toggleInViewPort((boolean) (args.getBoolean(0)));
         return;
       }
     }

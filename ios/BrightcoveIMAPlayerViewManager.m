@@ -27,7 +27,6 @@ RCT_EXPORT_VIEW_PROPERTY(volume, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(bitRate, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(adVideoLoadTimeout, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(playbackRate, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(adStarted, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPause, RCTDirectEventBlock);
@@ -49,6 +48,15 @@ RCT_EXPORT_METHOD(toggleFullscreen:(nonnull NSNumber *)reactTag isFullscreen:(BO
         BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
         if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
             [player toggleFullscreen:isFullscreen];
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(toggleInViewPort:(nonnull NSNumber *)reactTag inViewPort:(BOOL)inViewPort) {
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
+        if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
+            [player toggleInViewPort:inViewPort];
         }
     }];
 }

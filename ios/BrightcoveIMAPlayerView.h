@@ -32,12 +32,12 @@
 @property (nonatomic) float targetPlaybackRate;
 @property (nonatomic) BOOL playbackServiceDirty;
 @property (nonatomic) NSTimeInterval currentVideoDuration;
+@property (nonatomic) BOOL inViewPort;
 
 @property (nonatomic, copy) NSDictionary *settings;
 @property (nonatomic, copy) NSString *videoId;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
-@property (nonatomic, copy) RCTDirectEventBlock adStarted;
 @property (nonatomic, copy) RCTDirectEventBlock onReady;
 @property (nonatomic, copy) RCTDirectEventBlock onPlay;
 @property (nonatomic, copy) RCTDirectEventBlock onPause;
@@ -51,6 +51,7 @@
 -(void) setupWithSettings:(NSString*)settings;
 -(void) seekTo:(NSNumber *)time;
 -(void) toggleFullscreen:(BOOL)isFullscreen;
+-(void) toggleInViewPort:(BOOL)inViewPort;
 -(void) pause;
 -(void) play;
 -(void) stopPlayback;
