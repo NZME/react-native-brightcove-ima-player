@@ -332,6 +332,10 @@
         if (self.onPause) {
             self.onPause(@{});
         }
+    } else if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsLoaderLoaded) {
+        if (self.onAdStarted) {
+            self.onAdStarted(@{});
+        }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdProgress) {
         // catches scroll away before ads start bug
         if (!_inViewPort) {

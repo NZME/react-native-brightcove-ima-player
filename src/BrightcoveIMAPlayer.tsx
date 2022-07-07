@@ -54,7 +54,7 @@ type BrightcoveIMAPlayerProps = ViewProps & {
    */
   adVideoLoadTimeout?: number;
   playbackRate?: number;
-  adStarted?: (
+  onAdStarted?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
   ) => void;
   onReady?: (

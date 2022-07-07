@@ -329,22 +329,20 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   }
 
   public void pause() {
-    if (this.brightcoveVideoView != null) {
-      if (this.adsPlaying && this.googleIMAComponent != null) {
-        this.googleIMAComponent.getVideoAdPlayer().pauseAd();
-      } else if (this.playing) {
-        this.brightcoveVideoView.pause();
-      }
+    if (this.adsPlaying && this.googleIMAComponent != null && this.googleIMAComponent.getVideoAdPlayer() != null) {
+      // TODO upgrade to pauseAd(AdMediaInfo)
+      this.googleIMAComponent.getVideoAdPlayer().pause();
+    } else if (this.playing && this.brightcoveVideoView != null) {
+      this.brightcoveVideoView.pause(); 
     }
   }
 
   public void play() {
-    if (this.brightcoveVideoView != null) {
-      if (this.adsPlaying && this.googleIMAComponent != null) {
-        this.googleIMAComponent.getVideoAdPlayer().resumeAd();
-      } else {
-        this.brightcoveVideoView.start();
-      }
+    if (this.adsPlaying && this.googleIMAComponent != null && this.googleIMAComponent.getVideoAdPlayer() != null) {
+      // TODO upgrade to resumeAd(AdMediaInfo)
+      this.googleIMAComponent.getVideoAdPlayer().resumeAd();
+    } else if (this.brightcoveVideoView != null) {
+      this.brightcoveVideoView.start();
     }
   }
 

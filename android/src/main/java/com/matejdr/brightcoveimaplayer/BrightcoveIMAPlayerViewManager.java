@@ -167,7 +167,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public @Nullable
   Map<String, Object> getExportedCustomDirectEventTypeConstants() {
     Map<String, Object> map = new HashMap<>();
-    map.put(AD_STARTED, (Object) MapBuilder.of("registrationName", "adStarted"));
+    map.put(AD_STARTED, (Object) MapBuilder.of("registrationName", "onAdStarted"));
     map.put(EVENT_READY, (Object) MapBuilder.of("registrationName", "onReady"));
     map.put(EVENT_PLAY, (Object) MapBuilder.of("registrationName", "onPlay"));
     map.put(EVENT_PAUSE, (Object) MapBuilder.of("registrationName", "onPause"));
