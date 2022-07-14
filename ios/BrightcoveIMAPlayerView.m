@@ -60,11 +60,14 @@
         imaSettings.ppid = kViewControllerIMAPublisherID;
     }
     imaSettings.language = kViewControllerIMALanguage;
+    imaSettings.autoPlayAdBreaks = NO;
 
     IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
     renderSettings.linkOpenerPresentingController = RCTPresentedViewController();
     renderSettings.linkOpenerDelegate = self;
+    renderSettings.enablePreloading = YES; // default is yes anyway
 
+    // Timeout (in seconds) when loading a video ad media file. If loading takes longer than this timeout, the ad playback is canceled and the next ad in the pod plays, if available. Use -1 for the default of 8 seconds.
     if (_targetAdVideoLoadTimeout == 0) {
         renderSettings.loadVideoTimeout = 3.;
     } else {
@@ -96,7 +99,7 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
 
     BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
-    BOOL autoPlay = [settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
+    BOOL autoPlay = NO; //[settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
     BOOL allowsExternalPlayback = [settings objectForKey:@"allowsExternalPlayback"] != nil ? [[settings objectForKey:@"allowsExternalPlayback"] boolValue] : YES;
 
     _playbackController.autoAdvance = autoAdvance;
@@ -238,6 +241,8 @@
         _inViewPort = YES;
     } else {
         _inViewPort = NO;
+        [self.playbackController pauseAd];
+        [self.playbackController pause];
     }
 }
 
@@ -254,8 +259,9 @@
     if (self.playbackController) {
         if (_adsPlaying) {
             [self.playbackController resumeAd];
-            [self.playbackController pause];
+            //[self.playbackController pause];
         } else {
+            // if ad hasnt started, this will kick it off
             [self.playbackController play];
         }
     }
@@ -291,6 +297,8 @@
 #pragma mark - BCOVPlaybackControllerBasicDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
+    
+    // NSLog(@"BC - DEBUG eventType: %@", lifecycleEvent.eventType);
         
     if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
@@ -333,20 +341,26 @@
             self.onPause(@{});
         }
     } else if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsLoaderLoaded) {
-        if (self.onAdStarted) {
-            self.onAdStarted(@{});
+        if (self.onAdsLoaded) {
+            self.onAdsLoaded(@{});
         }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdProgress) {
         // catches scroll away before ads start bug
         if (!_inViewPort) {
             [self.playbackController pauseAd];
+            [self.playbackController pause];
         }
-    } else if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent) {
+    }
+    
+    if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent) {
         IMAAdEvent *adEvent = lifecycleEvent.properties[@"adEvent"];
+        
+        // NSLog(@"BC - DEBUG adEvent: %ld %@", adEvent.type, adEvent.typeString);
                 
         switch (adEvent.type)
         {
             case kIMAAdEvent_LOADED:
+                _adsPlaying = YES;
                 break;
             case kIMAAdEvent_PAUSE:
                 break;
@@ -417,35 +431,35 @@
 #pragma mark - BCOVPlaybackControllerAdsDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
-    if (!_inViewPort && _adsPlaying) {
+    if (!_inViewPort) {
         [self.playbackController pauseAd];
     }
-    [self.playbackController pause];
+//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
-    if (_inViewPort) {
-        [self.playbackController play];
-    }
+//    if (_inViewPort) {
+//        [self.playbackController play];
+//    }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
-    if (!_inViewPort && _adsPlaying) {
-        [self.playbackController pauseAd];
-    }
-    [self.playbackController pause];
+//    if (!_inViewPort) {
+//        [self.playbackController pauseAd];
+//    }
+//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAd:(BCOVAd *)ad {
-    if (_inViewPort) {
-        [self.playbackController play];
-    }
+//    if (_inViewPort) {
+//        [self.playbackController play];
+//    }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session ad:(BCOVAd *)ad didProgressTo:(NSTimeInterval)progress {
-    if (_playing) {
-        [self.playbackController pause];
-    }
+//    if (_playing) {
+//        [self.playbackController pause];
+//    }
 }
 
 #pragma mark - IMAPlaybackSessionDelegate Methods

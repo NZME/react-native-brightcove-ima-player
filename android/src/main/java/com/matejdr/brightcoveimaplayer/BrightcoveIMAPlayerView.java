@@ -38,6 +38,7 @@ import com.google.ads.interactivemedia.v3.api.AdsManager;
 import com.google.ads.interactivemedia.v3.api.AdsRequest;
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
+import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -60,7 +61,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private String policyKey;
   private String accountId;
   private String videoId;
-  private boolean autoPlay = true;
+  private boolean autoPlay = false;
   private boolean playing = false;
   private boolean adsPlaying = false;
   private boolean inViewPort = true;
@@ -107,14 +108,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     // Use a procedural abstraction to setup the Google IMA SDK via the plugin.
     setupGoogleIMA();
 
-    eventEmitter.on(EventType.AD_STARTED, new EventListener() {
-      @Override
-      public void processEvent(Event e) {
-        WritableMap event = Arguments.createMap();
-        ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.AD_STARTED, event);
-      }
-    });
     eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, new EventListener() {
       @Override
       public void processEvent(Event e) {
@@ -392,9 +385,9 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private void playVideo(Video video) {
     BrightcoveIMAPlayerView.this.brightcoveVideoView.clear();
     BrightcoveIMAPlayerView.this.brightcoveVideoView.add(video);
-    if (BrightcoveIMAPlayerView.this.autoPlay) {
-      BrightcoveIMAPlayerView.this.brightcoveVideoView.start();
-    }
+    // if (BrightcoveIMAPlayerView.this.autoPlay) {
+    //   BrightcoveIMAPlayerView.this.brightcoveVideoView.start();
+    // }
   }
 
   private void fixVideoLayout() {
@@ -427,6 +420,12 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         int markerTime = cuepoint < 0 ? brightcoveSeekBar.getMax() : (int) (cuepoint * DateUtils.SECOND_IN_MILLIS);
         mediaController.getBrightcoveSeekBar().addMarker(markerTime);
       }
+
+      // fire off ADS_LOADED event
+      WritableMap adEvent = Arguments.createMap();
+      ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
+      reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_ADS_LOADED, adEvent);
+
     });
     videoView.setMediaController(mediaController);
   }
@@ -451,6 +450,13 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     // Enable Logging upon ad break completion.
     eventEmitter.on(EventType.AD_BREAK_COMPLETED, event -> {
       adsPlaying = false;
+    });
+    // checks ad progress and pauses if out of view
+    // fixes the elusive play then scroll away before pre-roll starts bug
+    eventEmitter.on(EventType.AD_PROGRESS, event -> {
+      if (!inViewPort) {
+        this.pause();
+      }
     });
 
     // Set up a listener for initializing AdsRequests. 
@@ -477,11 +483,17 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       imaSdkSettings.setPpid(settings.getString("publisherProvidedID"));
     }
 
+    AdsRenderingSettings adsRenderingSettings =
+    ImaSdkFactory.getInstance().createAdsRenderingSettings();
+    // preload ads
+    adsRenderingSettings.setEnablePreloading(true);
+
     // Create the Brightcove IMA Plugin and pass in the event
     // emitter so that the plugin can integrate with the SDK.
     googleIMAComponent = new GoogleIMAComponent.Builder(this.brightcoveVideoView, eventEmitter)
       .setUseAdRules(true)
       .setLoadVideoTimeout(adVideoLoadTimeout)
+      .setAdsRenderingSettings(adsRenderingSettings)
       .setImaSdkSettings(imaSdkSettings)
       .build();
   }
