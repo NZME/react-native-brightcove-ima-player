@@ -7,7 +7,7 @@ React Native implementation of Brightcove Player native SDK video player.
 ## Brightcove SDK Version used
 
 - Minimum Required version of iOS is 11
-- iOS Brightcove-Player-IMA 6.10.5
+- iOS Brightcove-Player-IMA 6.10.6
 - com.brightcove.player:android-ima-plugin 6.18.6
 
 ## Installation
@@ -36,7 +36,7 @@ platform :ios, '11.0'
 allprojects {
   repositories {
       maven {
-          url 'http://repo.brightcove.com/releases'
+          url 'https://repo.brightcove.com/releases'
       }
   }
 }
