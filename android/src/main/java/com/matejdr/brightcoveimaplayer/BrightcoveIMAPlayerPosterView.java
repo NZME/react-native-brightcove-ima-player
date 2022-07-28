@@ -81,6 +81,12 @@ public class BrightcoveIMAPlayerPosterView extends RelativeLayout implements Lif
       this.imageView.setImageResource(android.R.color.transparent);
       return;
     }
+    
+    if (video.getPosterImage() == null) {
+      this.imageView.setImageResource(android.R.color.transparent);
+      return;
+    }
+    
     String url = video.getPosterImage().toString();
     if (url == null) {
       this.imageView.setImageResource(android.R.color.transparent);
