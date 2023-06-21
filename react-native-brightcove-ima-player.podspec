@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
 
   s.dependency "React-Core"
   s.dependency "Brightcove-Player-IMA", '6.10.6'
-  s.dependency 'Google-Mobile-Ads-SDK', '~> 9.0.0'
+  s.dependency 'Google-Mobile-Ads-SDK', '~> 9.14.0'
 end
