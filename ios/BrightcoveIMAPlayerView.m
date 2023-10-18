@@ -42,6 +42,16 @@
     [control.progressSlider setTrackHeight:2];
     [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
 
+    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:nil options:options controlsView:control];
+    if (_disableDefaultControl == true) {
+        _playerView.controlsView.hidden = true;
+    }
+    _playerView.delegate = self;
+    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _playerView.backgroundColor = UIColor.blackColor;
+
+    [self addSubview:_playerView];
+    
     NSString * kViewControllerIMAPublisherID = [settings objectForKey:@"publisherProvidedID"];
     NSString * kViewControllerIMALanguage = @"en";
 
@@ -80,7 +90,8 @@
                            companionSlots:nil
                            viewStrategy:nil
                            options:imaPlaybackSessionOptions];
-    
+
+    _playerView.playbackController = _playbackController;
     _playbackController.delegate = self;
 
     // By pass mute button
@@ -95,21 +106,10 @@
     _playbackController.autoPlay = autoPlay;
     _playbackController.allowsExternalPlayback = allowsExternalPlayback;
 
-    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
-    if (_disableDefaultControl == true) {
-        _playerView.controlsView.hidden = true;
-    }
-    _playerView.delegate = self;
-    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _playerView.backgroundColor = UIColor.blackColor;
-    _playerView.playbackController = _playbackController;
-
     _targetVolume = 1.0;
-       _autoPlay = autoPlay;
-       // default is in view
-       _inViewPort = YES;
-    
-    [self addSubview:_playerView];
+    _autoPlay = autoPlay;
+    // default is in view
+    _inViewPort = YES;
 }
 
 - (void)setupService {
@@ -282,7 +282,7 @@
 }
 
 - (void)handleAppStateDidChange:(NSNotification *)notification
-{
+{    
     if ([notification.name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
         [self toggleInViewPort:NO];
         [self pause];
@@ -434,6 +434,7 @@
     if (!_inViewPort) {
         [self.playbackController pauseAd];
     }
+//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
