@@ -112,6 +112,22 @@
         
         // Create and configure the adDisplayView
         self.adDisplayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        // Add the adDisplayView to the contentOverlayView of the player view
+        [self.playerView.contentOverlayView addSubview:self.adDisplayView];
+        // Disable autoresizing mask so that Auto Layout can be used
+        self.adDisplayView.translatesAutoresizingMaskIntoConstraints = NO;
+
+        CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+        CGFloat marginPercentage = 0.03;
+        CGFloat margin = screenHeight * marginPercentage;
+
+        // Use Auto Layout constraints to make it responsive
+        NSLayoutConstraint *leadingConstraint = [self.adDisplayView.leadingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.leadingAnchor];
+        NSLayoutConstraint *trailingConstraint = [self.adDisplayView.trailingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.trailingAnchor];
+        NSLayoutConstraint *topConstraint = [self.adDisplayView.topAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.topAnchor];
+        NSLayoutConstraint *bottomConstraint = [self.adDisplayView.bottomAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.bottomAnchor constant:-margin];
+
+        [NSLayoutConstraint activateConstraints:@[leadingConstraint, trailingConstraint, topConstraint, bottomConstraint]];
         
         // Add the adDisplayView to the contentOverlayView of the player view
         [self.playerView.contentOverlayView addSubview:self.adDisplayView];
