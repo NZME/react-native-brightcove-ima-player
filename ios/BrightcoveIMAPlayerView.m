@@ -12,7 +12,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        //        [self setup];
+//        [self setup];
     }
     return self;
 }
@@ -21,17 +21,17 @@
 {
     self = [super init];
     if (!self) return nil;
-    
+
     for (NSString *name in @[
-        UIApplicationDidBecomeActiveNotification,
-        UIApplicationDidEnterBackgroundNotification
-    ]) {
+             UIApplicationDidBecomeActiveNotification,
+             UIApplicationDidEnterBackgroundNotification
+           ]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleAppStateDidChange:)
                                                      name:name
                                                    object:nil];
-    }
-    
+      }
+
     return self;
 }
 
@@ -397,7 +397,7 @@
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
     
     // NSLog(@"BC - DEBUG eventType: %@", lifecycleEvent.eventType);
-    
+        
     if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
         lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
@@ -414,9 +414,9 @@
             self.onReady(@{});
         }
         // disabling this due to video blip before pre-roll
-        //        if (_autoPlay) {
-        //            [_playbackController play];
-        //        }
+//        if (_autoPlay) {
+//            [_playbackController play];
+//        }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
         _playing = true;
         [self refreshPlaybackRate];
@@ -434,7 +434,7 @@
                 }
             }
         }
-        
+
         if (self.onPause) {
             self.onPause(@{});
         }
@@ -454,7 +454,7 @@
         IMAAdEvent *adEvent = lifecycleEvent.properties[@"adEvent"];
         
         // NSLog(@"BC - DEBUG adEvent: %ld %@", adEvent.type, adEvent.typeString);
-        
+                
         switch (adEvent.type)
         {
             case kIMAAdEvent_LOADED:
@@ -484,31 +484,31 @@
     self.currentVideoDuration = duration;
     if (self.onChangeDuration) {
         self.onChangeDuration(@{
-            @"duration": @(duration)
-        });
+                                @"duration": @(duration)
+                                });
     }
 }
 
 -(void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didProgressTo:(NSTimeInterval)progress {
     if (self.onProgress && progress > 0 && progress != INFINITY) {
         self.onProgress(@{
-            @"currentTime": @(progress)
-        });
+                          @"currentTime": @(progress)
+                          });
     }
     float bufferProgress = _playerView.controlsView.progressSlider.bufferProgress;
     if (_lastBufferProgress != bufferProgress) {
         _lastBufferProgress = bufferProgress;
         if (self.onUpdateBufferProgress) {
             self.onUpdateBufferProgress(@{
-                @"bufferProgress": @(bufferProgress),
-            });
+                                          @"bufferProgress": @(bufferProgress),
+                                          });
         }
     }
 }
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
-        _fullScreenCloseBtn.hidden = YES;
+         _fullScreenCloseBtn.hidden = YES;
         // if controls are disabled, disable player controls on normal mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = true;
@@ -531,66 +531,66 @@
 #pragma mark - BCOVPlaybackControllerAdsDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
-    [self addFullScreenCloseBtn];
     if (!_inViewPort) {
         [self.playbackController pauseAd];
     }
-    //    [self.playbackController pause];
+//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
-    //    if (_inViewPort) {
-    //        [self.playbackController play];
-    //    }
+//    if (_inViewPort) {
+//        [self.playbackController play];
+//    }
+    [self addFullScreenCloseBtn];
 }
 
 - (void)addFullScreenCloseBtn{
     // Create a button for closing full screen mode
     _fullScreenCloseBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    
+
     // Set the frame (position and size) of the button
     _fullScreenCloseBtn.frame = CGRectMake(10, 0, 40, 40);
-    
+
     // Set the button's title text to "X" for the close icon
     [_fullScreenCloseBtn setTitle:@"X" forState:UIControlStateNormal];
-    
+
     // Set the font size for the title text
     [_fullScreenCloseBtn.titleLabel setFont:[UIFont systemFontOfSize:30.0]];
-    
+
     // Define the action to perform when the button is tapped (calls the `closeFullScreen` method)
     [_fullScreenCloseBtn addTarget:self action:@selector(closeFullScreen) forControlEvents:UIControlEventTouchUpInside];
-    
+
     // Set the text color of the button's title to white
     [_fullScreenCloseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
+
     // Set the background color of the button to be clear (transparent)
     [_fullScreenCloseBtn setBackgroundColor:[UIColor clearColor]];
-    
+
     // Allow user interaction with the button
     _fullScreenCloseBtn.userInteractionEnabled = YES;
-    
+
     // Add the custom UI button to the contentOverlayView's superview
     [self.playerView.contentOverlayView.superview addSubview:_fullScreenCloseBtn];
-    
+
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
-    //    if (!_inViewPort) {
-    //        [self.playbackController pauseAd];
-    //    }
-    //    [self.playbackController pause];
+//    if (!_inViewPort) {
+//        [self.playbackController pauseAd];
+//    }
+//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAd:(BCOVAd *)ad {
-    //    if (_inViewPort) {
-    //        [self.playbackController play];
-    //    }
+//    if (_inViewPort) {
+//        [self.playbackController play];
+//    }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session ad:(BCOVAd *)ad didProgressTo:(NSTimeInterval)progress {
-    //    if (_playing) {
-    //        [self.playbackController pause];
-    //    }
+//    if (_playing) {
+//        [self.playbackController pause];
+//    }
 }
 
 #pragma mark - IMAPlaybackSessionDelegate Methods
