@@ -5,6 +5,8 @@
 
 @property (nonatomic) UIButton *fullScreenCloseBtn; // Add full screen close button
 @property (nonatomic) UIView *adDisplayView; // Add an ad container view
+@property (nonatomic) BOOL isAppInForeground; // App state
+@property (nonatomic) UIButton *adResumeButton; // Define the ad resume button
 
 @end
 
@@ -21,10 +23,12 @@
 {
     self = [super init];
     if (!self) return nil;
+    
+    self.isAppInForeground = YES;
 
     for (NSString *name in @[
              UIApplicationDidBecomeActiveNotification,
-             UIApplicationDidEnterBackgroundNotification
+             UIApplicationWillResignActiveNotification
            ]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleAppStateDidChange:)
@@ -161,6 +165,11 @@
         _playbackController.autoPlay = autoPlay;
         _playbackController.allowsExternalPlayback = allowsExternalPlayback;
         
+        // hide ad resume button if exist everytime
+        if(_adResumeButton){
+            _adResumeButton.hidden = YES;
+        }
+        
         // Set the target volume, autoPlay, and inViewPort defaults
         _targetVolume = 1.0;
         _autoPlay = autoPlay;
@@ -214,6 +223,41 @@
     @catch (NSException *exception) {
         NSLog(@"-------closeFullScreen Exception------: %@", exception);
     }
+}
+
+// Implement the addTaptoResumeAdBtn method
+- (void)addTaptoResumeAdBtn {
+    // Create the resume button
+    _adResumeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    // Set the button's title and text color
+    [_adResumeButton setTitle:@"Tap to resume" forState:UIControlStateNormal];
+    [_adResumeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    // Define the action to perform when the button is tapped (calls the `adResumeButtonTapped` method)
+    [_adResumeButton addTarget:self action:@selector(adResumeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+
+    // Set the button's frame (position and size)
+    _adResumeButton.frame = CGRectMake(0, 0, 150, 60);
+    
+    // Center the resume button on the adDisplayView
+    _adResumeButton.center = CGPointMake(self.adDisplayView.bounds.size.width / 2, self.adDisplayView.bounds.size.height / 2);
+    
+    // Set the background color of the button to black
+    _adResumeButton.backgroundColor = [UIColor blackColor];
+    
+    // Add the resume button to the adDisplayView
+    [self.playerView.contentOverlayView.superview  addSubview:_adResumeButton];
+}
+
+// Implement the adResumeButtonTapped method
+- (void)adResumeButtonTapped {
+    // Check if the play button exists and remove it
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+    }
+    // Resume the ad 
+    [self.playbackController resumeAd];
 }
 
 
@@ -360,6 +404,7 @@
             //[self.playbackController pause];
         } else {
             // if ad hasnt started, this will kick it off
+            _adResumeButton.hidden = YES;
             [self.playbackController play];
         }
     }
@@ -381,14 +426,21 @@
 
 - (void)handleAppStateDidChange:(NSNotification *)notification
 {
-    if ([notification.name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
-        [self toggleInViewPort:NO];
-        [self pause];
+    // This method will be called when the notification center is pulled down or app is about to become inactive
+    if ([notification.name isEqualToString:UIApplicationWillResignActiveNotification]) {
+       self.isAppInForeground = NO;
+       [self toggleInViewPort:NO];
+       [self pause];
     }
     
+    // This method will be called when your app becomes active again.
     if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
         [self toggleInViewPort:YES];
-        [self pause];
+        if(!self.isAppInForeground && _adsPlaying){
+            self.adResumeButton.hidden = NO;
+            [self.playbackController resumeAd];
+        }
+        
     }
 }
 
@@ -531,10 +583,15 @@
 #pragma mark - BCOVPlaybackControllerAdsDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
+    // Create ad resume button
+    [self addTaptoResumeAdBtn];
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+    }
+    
     if (!_inViewPort) {
         [self.playbackController pauseAd];
     }
-//    [self.playbackController pause];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
@@ -542,6 +599,11 @@
 //        [self.playbackController play];
 //    }
     [self addFullScreenCloseBtn];
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+        [_adResumeButton removeFromSuperview];
+    }
+    self.adDisplayView = nil;
 }
 
 - (void)addFullScreenCloseBtn{
