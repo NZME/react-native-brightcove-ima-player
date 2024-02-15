@@ -23,7 +23,7 @@ def safeExtGet(prop, fallback) {
 android {
     compileSdkVersion safeExtGet('BrightcoveImaPlayer_compileSdkVersion', 29)
     defaultConfig {
-        minSdkVersion safeExtGet('BrightcoveImaPlayer_minSdkVersion', 19)
+        minSdkVersion safeExtGet('BrightcoveImaPlayer_minSdkVersion', 21)
         targetSdkVersion safeExtGet('BrightcoveImaPlayer_targetSdkVersion', 29)
         versionCode 1
         versionName "1.0"
