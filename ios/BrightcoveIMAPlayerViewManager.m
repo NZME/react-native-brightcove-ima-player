@@ -75,6 +75,7 @@ RCT_EXPORT_METHOD(play:(nonnull NSNumber *)reactTag) {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
         BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView*)viewRegistry[reactTag];
         if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
+            [player toggleFullscreen:YES];
             [player play];
         }
     }];

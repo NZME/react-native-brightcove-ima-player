@@ -3,6 +3,11 @@
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
+@property (nonatomic) UIButton *fullScreenCloseBtn; // Add full screen close button
+@property (nonatomic) UIView *adDisplayView; // Add an ad container view
+@property (nonatomic) BOOL isAppInForeground; // App state
+@property (nonatomic) UIButton *adResumeButton; // Define the ad resume button
+
 @end
 
 @implementation BrightcoveIMAPlayerView
@@ -18,10 +23,12 @@
 {
     self = [super init];
     if (!self) return nil;
+    
+    self.isAppInForeground = YES;
 
     for (NSString *name in @[
              UIApplicationDidBecomeActiveNotification,
-             UIApplicationDidEnterBackgroundNotification
+             UIApplicationWillResignActiveNotification
            ]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleAppStateDidChange:)
@@ -33,83 +40,145 @@
 }
 
 - (void)setupWithSettings:(NSDictionary*)settings {
-    BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
-    options.jumpBackInterval = 999;
-    [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
-    options.presentingViewController = RCTPresentedViewController();
-    options.automaticControlTypeSelection = YES;
-    BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
-    [control.progressSlider setTrackHeight:2];
-    [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
+    @try {
+        // Create and configure options for the Brightcove player
+        BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
+        
+        // Configure jumpBackInterval
+        options.jumpBackInterval = 999;
+        
+        // Set the Learn More button behavior
+        [options setLearnMoreButtonBrowserStyle:BCOVPUILearnMoreButtonUseInAppBrowser];
+        
+        // Set the presenting view controller
+        options.presentingViewController = RCTPresentedViewController();
+        
+        // Enable automatic control type selection
+        options.automaticControlTypeSelection = YES;
+        
+        // Create and configure the basic control view
+        BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
+        
+        // Customize the progress slider appearance
+        [control.progressSlider setTrackHeight:2];
+        [control.progressSlider setMinimumTrackTintColor:[UIColor colorWithRed:0.22f green:0.64f blue:0.84f alpha:1.0f]];
+        
+        // Create the player view with the provided options and control view
+        _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:nil options:options controlsView:control];
+        
+        // Hide default controls if _disableDefaultControl is true
+        if (_disableDefaultControl == true) {
+            _playerView.controlsView.hidden = true;
+        }
+        
+        // Set the delegate, resizing, and background color for the player view
+        _playerView.delegate = self;
+        _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _playerView.backgroundColor = [UIColor clearColor];
+        
+        // Add the player view as a subview
+        [self addSubview:_playerView];
+        
+        // Obtain the publisher ID and language for IMA
+        NSString *kViewControllerIMAPublisherID = [settings objectForKey:@"publisherProvidedID"];
+        NSString *kViewControllerIMALanguage = @"en";
+        
+        // Configure IMA settings
+        IMASettings *imaSettings = [[IMASettings alloc] init];
+        if (kViewControllerIMAPublisherID != nil) {
+            imaSettings.ppid = kViewControllerIMAPublisherID;
+        }
+        imaSettings.language = kViewControllerIMALanguage;
+        imaSettings.autoPlayAdBreaks = NO;
+        
+        // Configure IMA ad rendering settings
+        IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
+        renderSettings.linkOpenerPresentingController = RCTPresentedViewController();
+        renderSettings.linkOpenerDelegate = self;
+        renderSettings.enablePreloading = YES; // Default is yes
+        
+        // Set the timeout for loading video ad media files
+        if (_targetAdVideoLoadTimeout == 0) {
+            renderSettings.loadVideoTimeout = 3.0;
+        } else {
+            renderSettings.loadVideoTimeout = _targetAdVideoLoadTimeout;
+        }
+        
+        // Obtain the IMAUrl from settings and create an ads request policy
+        NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
+        BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
+        
+        // Configure IMA playback session options
+        NSDictionary *imaPlaybackSessionOptions = @{ kBCOVIMAOptionIMAPlaybackSessionDelegateKey: self };
+        
+        // Get the shared Brightcove player manager
+        BCOVPlayerSDKManager *manager = [BCOVPlayerSDKManager sharedManager];
+        
+        // Create and configure the adDisplayView
+        self.adDisplayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        // Add the adDisplayView to the contentOverlayView of the player view
+        [self.playerView.contentOverlayView addSubview:self.adDisplayView];
+        // Disable autoresizing mask so that Auto Layout can be used
+        self.adDisplayView.translatesAutoresizingMaskIntoConstraints = NO;
 
-    NSString * kViewControllerIMAPublisherID = [settings objectForKey:@"publisherProvidedID"];
-    NSString * kViewControllerIMALanguage = @"en";
+        CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+        CGFloat marginPercentage = 0.03;
+        CGFloat margin = screenHeight * marginPercentage;
 
-    IMASettings *imaSettings = [[IMASettings alloc] init];
-    if (kViewControllerIMAPublisherID != nil) {
-        imaSettings.ppid = kViewControllerIMAPublisherID;
+        // Use Auto Layout constraints to make it responsive
+        NSLayoutConstraint *leadingConstraint = [self.adDisplayView.leadingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.leadingAnchor];
+        NSLayoutConstraint *trailingConstraint = [self.adDisplayView.trailingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.trailingAnchor];
+        NSLayoutConstraint *topConstraint = [self.adDisplayView.topAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.topAnchor];
+        NSLayoutConstraint *bottomConstraint = [self.adDisplayView.bottomAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.bottomAnchor constant:-margin];
+
+        [NSLayoutConstraint activateConstraints:@[leadingConstraint, trailingConstraint, topConstraint, bottomConstraint]];
+        
+        // Add the adDisplayView to the contentOverlayView of the player view
+        [self.playerView.contentOverlayView addSubview:self.adDisplayView];
+        
+        // Create and configure the IMA playback controller
+        _playbackController = [manager createIMAPlaybackControllerWithSettings:imaSettings
+                                                          adsRenderingSettings:renderSettings
+                                                              adsRequestPolicy:adsRequestPolicy
+                                                                   adContainer:self.adDisplayView
+                                                                viewController:RCTPresentedViewController()
+                                                                companionSlots:nil
+                                                                  viewStrategy:nil
+                                                                       options:imaPlaybackSessionOptions];
+        
+        // Set the playback controller for the player view
+        _playerView.playbackController = _playbackController;
+        
+        // Set the delegate for the playback controller
+        _playbackController.delegate = self;
+        
+        // Bypass mute button for audio
+        NSError *error = nil;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+        
+        // Configure autoAdvance, autoPlay, and allowsExternalPlayback settings
+        BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
+        BOOL autoPlay = NO; // [settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
+        BOOL allowsExternalPlayback = [settings objectForKey:@"allowsExternalPlayback"] != nil ? [[settings objectForKey:@"allowsExternalPlayback"] boolValue] : YES;
+        
+        _playbackController.autoAdvance = autoAdvance;
+        _playbackController.autoPlay = autoPlay;
+        _playbackController.allowsExternalPlayback = allowsExternalPlayback;
+        
+        // hide ad resume button if exist everytime
+        if(_adResumeButton){
+            _adResumeButton.hidden = YES;
+        }
+        
+        // Set the target volume, autoPlay, and inViewPort defaults
+        _targetVolume = 1.0;
+        _autoPlay = autoPlay;
+        _inViewPort = YES;
     }
-    imaSettings.language = kViewControllerIMALanguage;
-    imaSettings.autoPlayAdBreaks = NO;
-
-    IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
-    renderSettings.linkOpenerPresentingController = RCTPresentedViewController();
-    renderSettings.linkOpenerDelegate = self;
-    renderSettings.enablePreloading = YES; // default is yes anyway
-
-    // Timeout (in seconds) when loading a video ad media file. If loading takes longer than this timeout, the ad playback is canceled and the next ad in the pod plays, if available. Use -1 for the default of 8 seconds.
-    if (_targetAdVideoLoadTimeout == 0) {
-        renderSettings.loadVideoTimeout = 3.;
-    } else {
-        renderSettings.loadVideoTimeout = _targetAdVideoLoadTimeout;
+    @catch (NSException *exception) {
+        // Handle exceptions by logging them
+        NSLog(@"-------setupWithSettings Exception------: %@", exception);
     }
-
-    NSString *IMAUrl = [settings objectForKey:@"IMAUrl"];
-    BCOVIMAAdsRequestPolicy *adsRequestPolicy = [BCOVIMAAdsRequestPolicy adsRequestPolicyWithVMAPAdTagUrl:IMAUrl];
-    
-    NSDictionary *imaPlaybackSessionOptions = @{ kBCOVIMAOptionIMAPlaybackSessionDelegateKey: self };
-    
-    BCOVPlayerSDKManager *manager = [BCOVPlayerSDKManager sharedManager];
-
-    _playbackController = [manager
-                           createIMAPlaybackControllerWithSettings:imaSettings
-                           adsRenderingSettings:renderSettings
-                           adsRequestPolicy:adsRequestPolicy
-                           adContainer:self.playerView.contentOverlayView
-                           viewController:RCTPresentedViewController()
-                           companionSlots:nil
-                           viewStrategy:nil
-                           options:imaPlaybackSessionOptions];
-    
-    _playbackController.delegate = self;
-
-    // By pass mute button
-    NSError *error = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-
-    BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
-    BOOL autoPlay = NO; //[settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
-    BOOL allowsExternalPlayback = [settings objectForKey:@"allowsExternalPlayback"] != nil ? [[settings objectForKey:@"allowsExternalPlayback"] boolValue] : YES;
-
-    _playbackController.autoAdvance = autoAdvance;
-    _playbackController.autoPlay = autoPlay;
-    _playbackController.allowsExternalPlayback = allowsExternalPlayback;
-
-    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
-    if (_disableDefaultControl == true) {
-        _playerView.controlsView.hidden = true;
-    }
-    _playerView.delegate = self;
-    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _playerView.backgroundColor = UIColor.blackColor;
-    _playerView.playbackController = _playbackController;
-
-    _targetVolume = 1.0;
-       _autoPlay = autoPlay;
-       // default is in view
-       _inViewPort = YES;
-    
-    [self addSubview:_playerView];
 }
 
 - (void)setupService {
@@ -118,6 +187,79 @@
         _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
     }
 }
+
+- (void)closeFullScreen {
+    @try {
+        if (self.playbackController) {
+            if (_adsPlaying) {
+                
+                // Hide the close button
+                _fullScreenCloseBtn.hidden = YES;
+                
+                // Pause any ongoing ad playback
+                [self.playbackController pauseAd];
+                
+                // Remove the adContainer (adDisplayView) from its superview
+                [self.adDisplayView removeFromSuperview];
+                
+                // Set _adsPlaying to NO to indicate that ads are no longer playing
+                _adsPlaying = NO;
+                
+                // Set the adContainer to nil to release its reference
+                self.adDisplayView = nil;
+                
+                // Transition back to the normal screen mode
+                [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
+                
+                // Resume video playback
+                [self.playbackController play];
+            } else {
+                _fullScreenCloseBtn.hidden = NO;
+                // Transition back to the normal screen mode
+                [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"-------closeFullScreen Exception------: %@", exception);
+    }
+}
+
+// Implement the addTaptoResumeAdBtn method
+- (void)addTaptoResumeAdBtn {
+    // Create the resume button
+    _adResumeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    // Set the button's title and text color
+    [_adResumeButton setTitle:@"Tap to resume" forState:UIControlStateNormal];
+    [_adResumeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    // Define the action to perform when the button is tapped (calls the `adResumeButtonTapped` method)
+    [_adResumeButton addTarget:self action:@selector(adResumeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+
+    // Set the button's frame (position and size)
+    _adResumeButton.frame = CGRectMake(0, 0, 150, 60);
+    
+    // Center the resume button on the adDisplayView
+    _adResumeButton.center = CGPointMake(self.adDisplayView.bounds.size.width / 2, self.adDisplayView.bounds.size.height / 2);
+    
+    // Set the background color of the button to black
+    _adResumeButton.backgroundColor = [UIColor blackColor];
+    
+    // Add the resume button to the adDisplayView
+    [self.playerView.contentOverlayView.superview  addSubview:_adResumeButton];
+}
+
+// Implement the adResumeButtonTapped method
+- (void)adResumeButtonTapped {
+    // Check if the play button exists and remove it
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+    }
+    // Resume the ad 
+    [self.playbackController resumeAd];
+}
+
 
 - (void)loadMovie {
     if (!_playbackService) return;
@@ -262,6 +404,7 @@
             //[self.playbackController pause];
         } else {
             // if ad hasnt started, this will kick it off
+            _adResumeButton.hidden = YES;
             [self.playbackController play];
         }
     }
@@ -283,14 +426,21 @@
 
 - (void)handleAppStateDidChange:(NSNotification *)notification
 {
-    if ([notification.name isEqualToString:UIApplicationDidEnterBackgroundNotification]) {
-        [self toggleInViewPort:NO];
-        [self pause];
+    // This method will be called when the notification center is pulled down or app is about to become inactive
+    if ([notification.name isEqualToString:UIApplicationWillResignActiveNotification]) {
+       self.isAppInForeground = NO;
+       [self toggleInViewPort:NO];
+       [self pause];
     }
     
+    // This method will be called when your app becomes active again.
     if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
         [self toggleInViewPort:YES];
-        [self pause];
+        if(!self.isAppInForeground && _adsPlaying){
+            self.adResumeButton.hidden = NO;
+            [self.playbackController resumeAd];
+        }
+        
     }
 }
 
@@ -410,6 +560,7 @@
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
+         _fullScreenCloseBtn.hidden = YES;
         // if controls are disabled, disable player controls on normal mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = true;
@@ -418,6 +569,7 @@
             self.onExitFullscreen(@{});
         }
     } else if (screenMode == BCOVPUIScreenModeFull) {
+        _fullScreenCloseBtn.hidden = NO;
         // enable player controls on fullscreen mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = false;
@@ -431,6 +583,12 @@
 #pragma mark - BCOVPlaybackControllerAdsDelegate methods
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
+    // Create ad resume button
+    [self addTaptoResumeAdBtn];
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+    }
+    
     if (!_inViewPort) {
         [self.playbackController pauseAd];
     }
@@ -440,6 +598,42 @@
 //    if (_inViewPort) {
 //        [self.playbackController play];
 //    }
+    [self addFullScreenCloseBtn];
+    if (_adResumeButton) {
+        _adResumeButton.hidden = YES;
+        [_adResumeButton removeFromSuperview];
+    }
+    self.adDisplayView = nil;
+}
+
+- (void)addFullScreenCloseBtn{
+    // Create a button for closing full screen mode
+    _fullScreenCloseBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+
+    // Set the frame (position and size) of the button
+    _fullScreenCloseBtn.frame = CGRectMake(10, 0, 40, 40);
+
+    // Set the button's title text to "X" for the close icon
+    [_fullScreenCloseBtn setTitle:@"X" forState:UIControlStateNormal];
+
+    // Set the font size for the title text
+    [_fullScreenCloseBtn.titleLabel setFont:[UIFont systemFontOfSize:30.0]];
+
+    // Define the action to perform when the button is tapped (calls the `closeFullScreen` method)
+    [_fullScreenCloseBtn addTarget:self action:@selector(closeFullScreen) forControlEvents:UIControlEventTouchUpInside];
+
+    // Set the text color of the button's title to white
+    [_fullScreenCloseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+    // Set the background color of the button to be clear (transparent)
+    [_fullScreenCloseBtn setBackgroundColor:[UIColor clearColor]];
+
+    // Allow user interaction with the button
+    _fullScreenCloseBtn.userInteractionEnabled = YES;
+
+    // Add the custom UI button to the contentOverlayView's superview
+    [self.playerView.contentOverlayView.superview addSubview:_fullScreenCloseBtn];
+
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
