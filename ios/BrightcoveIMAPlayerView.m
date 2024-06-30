@@ -3,7 +3,6 @@
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
-@property (nonatomic) UIButton *fullScreenCloseBtn; // Add full screen close button
 @property (nonatomic) UIView *adDisplayView; // Add an ad container view
 @property (nonatomic) BOOL isAppInForeground; // App state
 @property (nonatomic) UIButton *adResumeButton; // Define the ad resume button
@@ -185,43 +184,6 @@
     if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
         _playbackServiceDirty = NO;
         _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
-    }
-}
-
-- (void)closeFullScreen {
-    @try {
-        if (self.playbackController) {
-            if (_adsPlaying) {
-                
-                // Hide the close button
-                _fullScreenCloseBtn.hidden = YES;
-                
-                // Pause any ongoing ad playback
-                [self.playbackController pauseAd];
-                
-                // Remove the adContainer (adDisplayView) from its superview
-                [self.adDisplayView removeFromSuperview];
-                
-                // Set _adsPlaying to NO to indicate that ads are no longer playing
-                _adsPlaying = NO;
-                
-                // Set the adContainer to nil to release its reference
-                self.adDisplayView = nil;
-                
-                // Transition back to the normal screen mode
-                [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
-                
-                // Resume video playback
-                [self.playbackController play];
-            } else {
-                _fullScreenCloseBtn.hidden = NO;
-                // Transition back to the normal screen mode
-                [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
-            }
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"-------closeFullScreen Exception------: %@", exception);
     }
 }
 
@@ -560,7 +522,6 @@
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
-         _fullScreenCloseBtn.hidden = YES;
         // if controls are disabled, disable player controls on normal mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = true;
@@ -569,7 +530,6 @@
             self.onExitFullscreen(@{});
         }
     } else if (screenMode == BCOVPUIScreenModeFull) {
-        _fullScreenCloseBtn.hidden = NO;
         // enable player controls on fullscreen mode
         if (_disableDefaultControl == true) {
             _playerView.controlsView.hidden = false;
@@ -595,45 +555,11 @@
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
-//    if (_inViewPort) {
-//        [self.playbackController play];
-//    }
-    [self addFullScreenCloseBtn];
     if (_adResumeButton) {
         _adResumeButton.hidden = YES;
         [_adResumeButton removeFromSuperview];
     }
     self.adDisplayView = nil;
-}
-
-- (void)addFullScreenCloseBtn{
-    // Create a button for closing full screen mode
-    _fullScreenCloseBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-
-    // Set the frame (position and size) of the button
-    _fullScreenCloseBtn.frame = CGRectMake(10, 0, 40, 40);
-
-    // Set the button's title text to "X" for the close icon
-    [_fullScreenCloseBtn setTitle:@"X" forState:UIControlStateNormal];
-
-    // Set the font size for the title text
-    [_fullScreenCloseBtn.titleLabel setFont:[UIFont systemFontOfSize:30.0]];
-
-    // Define the action to perform when the button is tapped (calls the `closeFullScreen` method)
-    [_fullScreenCloseBtn addTarget:self action:@selector(closeFullScreen) forControlEvents:UIControlEventTouchUpInside];
-
-    // Set the text color of the button's title to white
-    [_fullScreenCloseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-    // Set the background color of the button to be clear (transparent)
-    [_fullScreenCloseBtn setBackgroundColor:[UIColor clearColor]];
-
-    // Allow user interaction with the button
-    _fullScreenCloseBtn.userInteractionEnabled = YES;
-
-    // Add the custom UI button to the contentOverlayView's superview
-    [self.playerView.contentOverlayView.superview addSubview:_fullScreenCloseBtn];
-
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
