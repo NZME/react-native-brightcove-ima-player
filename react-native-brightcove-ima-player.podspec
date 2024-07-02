@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/NZME/react-native-brightcove-ima-player.git", :tag => "v#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm}"
-  s.exclude_files = "ios/BrightcoveImaPlayerTest/**"
+  s.exclude_files = ["ios/BrightcoveImaPlayerTest/**","ios/Pod*","ios/Pods/**/*"]
 
   s.dependency "React-Core"
   s.dependency "Brightcove-Player-IMA", '6.10.6'
