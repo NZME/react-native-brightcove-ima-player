@@ -57,7 +57,7 @@
 - (UIViewController *)currentViewController {
     UIViewController *currentViewController = [self topViewController];
 
-    while (currentViewController.childViewControllers.count > 0 && ![currentViewController isKindOfClass:[UIViewController class]]) {
+    while (currentViewController.childViewControllers.count > 0) {
         currentViewController = currentViewController.childViewControllers.firstObject;
         NSLog(@"currentViewController : %@", currentViewController);
     }
@@ -125,7 +125,7 @@
         
         // Configure IMA ad rendering settings
         IMAAdsRenderingSettings *renderSettings = [[IMAAdsRenderingSettings alloc] init];
-        renderSettings.linkOpenerPresentingController = RCTPresentedViewController();
+        renderSettings.linkOpenerPresentingController = currentViewController;
         renderSettings.linkOpenerDelegate = self;
         renderSettings.enablePreloading = YES; // Default is yes
         
@@ -253,7 +253,7 @@
     if (_adResumeButton) {
         _adResumeButton.hidden = YES;
     }
-    // Resume the ad 
+    // Resume the ad
     [self.playbackController resumeAd];
 }
 
