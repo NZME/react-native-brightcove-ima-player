@@ -17,10 +17,15 @@
 
 @interface BrightcoveIMAPlayerView : UIView<BCOVIMAPlaybackSessionDelegate>
 
+#pragma mark - Playback properties
+
 @property (nonatomic) BCOVPlaybackService *playbackService;
 @property (nonatomic) id<BCOVPlaybackController> playbackController;
 @property (nonatomic) id<BCOVPlaybackSession> playbackSession;
 @property (nonatomic) BCOVPUIPlayerView *playerView;
+
+#pragma mark - State properties
+
 @property (nonatomic) BOOL playing;
 @property (nonatomic) BOOL adsPlaying;
 @property (nonatomic) BOOL autoPlay;
@@ -34,10 +39,15 @@
 @property (nonatomic) NSTimeInterval currentVideoDuration;
 @property (nonatomic) BOOL inViewPort;
 
+#pragma mark - Configuration properties
+
 @property (nonatomic, copy) NSDictionary *settings;
 @property (nonatomic, copy) NSString *videoId;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
+
+#pragma mark - Event callback properties
+
 @property (nonatomic, copy) RCTDirectEventBlock onAdsLoaded;
 @property (nonatomic, copy) RCTDirectEventBlock onReady;
 @property (nonatomic, copy) RCTDirectEventBlock onPlay;
@@ -48,6 +58,8 @@
 @property (nonatomic, copy) RCTDirectEventBlock onUpdateBufferProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onEnterFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onExitFullscreen;
+
+#pragma mark - Public methods
 
 -(void) setupWithSettings:(NSString*)settings;
 -(void) seekTo:(NSNumber *)time;

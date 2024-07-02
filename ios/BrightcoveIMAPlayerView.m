@@ -21,25 +21,58 @@
 - (id) init
 {
     self = [super init];
-    if (!self) return nil;
-    
-    self.isAppInForeground = YES;
-
-    for (NSString *name in @[
-             UIApplicationDidBecomeActiveNotification,
-             UIApplicationWillResignActiveNotification
-           ]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleAppStateDidChange:)
-                                                     name:name
-                                                   object:nil];
+    if (self){
+        self.isAppInForeground = YES;
+        [self registerForNotifications];
       }
-
     return self;
 }
 
+
+- (UIViewController *)topViewController {
+    UIViewController *topViewController = nil;
+
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
+            if ([scene isKindOfClass:[UIWindowScene class]]) {
+                UIWindowScene *windowScene = (UIWindowScene *)scene;
+                for (UIWindow *window in windowScene.windows) {
+                    if (window.isKeyWindow) {
+                        topViewController = window.rootViewController;
+                        break;
+                    }
+                }
+                if (topViewController) {
+                    break;
+                }
+            }
+        }
+    } else {
+        topViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    }
+
+    return topViewController;
+}
+
+- (UIViewController *)currentViewController {
+    UIViewController *currentViewController = [self topViewController];
+
+    while (currentViewController.childViewControllers.count > 0 && ![currentViewController isKindOfClass:[UIViewController class]]) {
+        currentViewController = currentViewController.childViewControllers.firstObject;
+        NSLog(@"currentViewController : %@", currentViewController);
+    }
+
+    NSLog(@"current is : %@", currentViewController);
+    return currentViewController;
+}
+
+#pragma mark - Setup
+
 - (void)setupWithSettings:(NSDictionary*)settings {
     @try {
+        // Current View Controller
+        UIViewController * currentViewController = [self currentViewController];
+        
         // Create and configure options for the Brightcove player
         BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
         
@@ -140,7 +173,7 @@
                                                           adsRenderingSettings:renderSettings
                                                               adsRequestPolicy:adsRequestPolicy
                                                                    adContainer:self.adDisplayView
-                                                                viewController:RCTPresentedViewController()
+                                                                viewController:currentViewController
                                                                 companionSlots:nil
                                                                   viewStrategy:nil
                                                                        options:imaPlaybackSessionOptions];
@@ -186,6 +219,8 @@
         _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
     }
 }
+
+#pragma mark - Playback Controls
 
 // Implement the addTaptoResumeAdBtn method
 - (void)addTaptoResumeAdBtn {
@@ -234,11 +269,12 @@
     }
 }
 
-- (id<BCOVPlaybackController>)createPlaybackController {
-    BCOVBasicSessionProviderOptions *options = [BCOVBasicSessionProviderOptions alloc];
-    BCOVBasicSessionProvider *provider = [[BCOVPlayerSDKManager sharedManager] createBasicSessionProviderWithOptions:options];
-    return [BCOVPlayerSDKManager.sharedManager createPlaybackControllerWithSessionProvider:provider viewStrategy:nil];
+-(void)dispose {
+    [self.playbackController setVideos:@[]];
+    self.playbackController = nil;
 }
+
+#pragma mark - Property Setters
 
 - (void)setVideoId:(NSString *)videoId {
     _videoId = videoId;
@@ -305,6 +341,13 @@
     }
 }
 
+- (void)setDisableDefaultControl:(BOOL)disable {
+    _disableDefaultControl = disable;
+    _playerView.controlsView.hidden = disable;
+}
+
+#pragma mark - Refresh Methods
+
 - (void)refreshVolume {
     if (!_playbackSession) return;
     _playbackSession.player.volume = _targetVolume;
@@ -322,10 +365,7 @@
     _playbackSession.player.rate = _targetPlaybackRate;
 }
 
-- (void)setDisableDefaultControl:(BOOL)disable {
-    _disableDefaultControl = disable;
-    _playerView.controlsView.hidden = disable;
-}
+#pragma mark - Player Actions
 
 - (void)seekTo:(NSNumber *)time {
     [_playbackController seekToTime:CMTimeMakeWithSeconds([time floatValue], NSEC_PER_SEC) completionHandler:^(BOOL finished) {
@@ -381,28 +421,28 @@
     }
 }
 
--(void)dispose {
-    [self.playbackController setVideos:@[]];
-    self.playbackController = nil;
+#pragma mark - Notification Handling
+
+- (void)registerForNotifications {
+    for (NSString *name in @[UIApplicationDidBecomeActiveNotification, UIApplicationWillResignActiveNotification]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppStateDidChange:) name:name object:nil];
+    }
 }
 
-- (void)handleAppStateDidChange:(NSNotification *)notification
-{
-    // This method will be called when the notification center is pulled down or app is about to become inactive
+- (void)handleAppStateDidChange:(NSNotification *)notification {
     if ([notification.name isEqualToString:UIApplicationWillResignActiveNotification]) {
-       self.isAppInForeground = NO;
-       [self toggleInViewPort:NO];
-       [self pause];
+        self.isAppInForeground = NO;
+        [self toggleInViewPort:NO];
+        [self pause];
     }
     
     // This method will be called when your app becomes active again.
     if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
         [self toggleInViewPort:YES];
-        if(!self.isAppInForeground && _adsPlaying){
+        if (!self.isAppInForeground && _adsPlaying) {
             self.adResumeButton.hidden = NO;
             [self.playbackController resumeAd];
         }
-        
     }
 }
 
