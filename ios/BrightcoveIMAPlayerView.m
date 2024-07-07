@@ -3,9 +3,7 @@
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
-@property (nonatomic) UIView *adDisplayView; // Add an ad container view
 @property (nonatomic) BOOL isAppInForeground; // App state
-@property (nonatomic) UIButton *adResumeButton; // Define the ad resume button
 
 @end
 
@@ -146,33 +144,12 @@
         // Get the shared Brightcove player manager
         BCOVPlayerSDKManager *manager = [BCOVPlayerSDKManager sharedManager];
         
-        // Create and configure the adDisplayView
-        self.adDisplayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        // Add the adDisplayView to the contentOverlayView of the player view
-        [self.playerView.contentOverlayView addSubview:self.adDisplayView];
-        // Disable autoresizing mask so that Auto Layout can be used
-        self.adDisplayView.translatesAutoresizingMaskIntoConstraints = NO;
-
-        CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
-        CGFloat marginPercentage = 0.03;
-        CGFloat margin = screenHeight * marginPercentage;
-
-        // Use Auto Layout constraints to make it responsive
-        NSLayoutConstraint *leadingConstraint = [self.adDisplayView.leadingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.leadingAnchor];
-        NSLayoutConstraint *trailingConstraint = [self.adDisplayView.trailingAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.trailingAnchor];
-        NSLayoutConstraint *topConstraint = [self.adDisplayView.topAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.topAnchor];
-        NSLayoutConstraint *bottomConstraint = [self.adDisplayView.bottomAnchor constraintEqualToAnchor:self.playerView.contentOverlayView.bottomAnchor constant:-margin];
-
-        [NSLayoutConstraint activateConstraints:@[leadingConstraint, trailingConstraint, topConstraint, bottomConstraint]];
-        
-        // Add the adDisplayView to the contentOverlayView of the player view
-        [self.playerView.contentOverlayView addSubview:self.adDisplayView];
         
         // Create and configure the IMA playback controller
         _playbackController = [manager createIMAPlaybackControllerWithSettings:imaSettings
                                                           adsRenderingSettings:renderSettings
                                                               adsRequestPolicy:adsRequestPolicy
-                                                                   adContainer:self.adDisplayView
+                                                                   adContainer:self.playerView.contentOverlayView
                                                                 viewController:currentViewController
                                                                 companionSlots:nil
                                                                   viewStrategy:nil
@@ -197,11 +174,6 @@
         _playbackController.autoPlay = autoPlay;
         _playbackController.allowsExternalPlayback = allowsExternalPlayback;
         
-        // hide ad resume button if exist everytime
-        if(_adResumeButton){
-            _adResumeButton.hidden = YES;
-        }
-        
         // Set the target volume, autoPlay, and inViewPort defaults
         _targetVolume = 1.0;
         _autoPlay = autoPlay;
@@ -221,43 +193,6 @@
 }
 
 #pragma mark - Playback Controls
-
-// Implement the addTaptoResumeAdBtn method
-- (void)addTaptoResumeAdBtn {
-    // Create the resume button
-    _adResumeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    // Set the button's title and text color
-    [_adResumeButton setTitle:@"Tap to resume" forState:UIControlStateNormal];
-    [_adResumeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    // Define the action to perform when the button is tapped (calls the `adResumeButtonTapped` method)
-    [_adResumeButton addTarget:self action:@selector(adResumeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-
-    // Set the button's frame (position and size)
-    _adResumeButton.frame = CGRectMake(0, 0, 150, 60);
-    
-    // Center the resume button on the adDisplayView
-    _adResumeButton.center = CGPointMake(self.adDisplayView.bounds.size.width / 2, self.adDisplayView.bounds.size.height / 2);
-    
-    // Set the background color of the button to black
-    _adResumeButton.backgroundColor = [UIColor blackColor];
-    
-    // Add the resume button to the adDisplayView
-    [self.playerView.contentOverlayView.superview  addSubview:_adResumeButton];
-}
-
-// Implement the adResumeButtonTapped method
-- (void)adResumeButtonTapped {
-    // Check if the play button exists and remove it
-    if (_adResumeButton) {
-        _adResumeButton.hidden = YES;
-    }
-    // Resume the ad
-    [self.playbackController resumeAd];
-}
-
-
 - (void)loadMovie {
     if (!_playbackService) return;
     if (_videoId) {
@@ -405,8 +340,6 @@
             [self.playbackController resumeAd];
             //[self.playbackController pause];
         } else {
-            // if ad hasnt started, this will kick it off
-            _adResumeButton.hidden = YES;
             [self.playbackController play];
         }
     }
@@ -440,7 +373,6 @@
     if ([notification.name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
         [self toggleInViewPort:YES];
         if (!self.isAppInForeground && _adsPlaying) {
-            self.adResumeButton.hidden = NO;
             [self.playbackController resumeAd];
         }
     }
@@ -578,56 +510,6 @@
             self.onEnterFullscreen(@{});
         }
     }
-}
-
-#pragma mark - BCOVPlaybackControllerAdsDelegate methods
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAdSequence:(BCOVAdSequence *)adSequence {
-    // Create ad resume button
-    [self addTaptoResumeAdBtn];
-    if (_adResumeButton) {
-        _adResumeButton.hidden = YES;
-    }
-    
-    if (!_inViewPort) {
-        [self.playbackController pauseAd];
-    }
-}
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAdSequence:(BCOVAdSequence *)adSequence {
-    if (_adResumeButton) {
-        _adResumeButton.hidden = YES;
-        [_adResumeButton removeFromSuperview];
-    }
-    self.adDisplayView = nil;
-}
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didEnterAd:(BCOVAd *)ad {
-//    if (!_inViewPort) {
-//        [self.playbackController pauseAd];
-//    }
-//    [self.playbackController pause];
-}
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didExitAd:(BCOVAd *)ad {
-//    if (_inViewPort) {
-//        [self.playbackController play];
-//    }
-}
-
-- (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session ad:(BCOVAd *)ad didProgressTo:(NSTimeInterval)progress {
-//    if (_playing) {
-//        [self.playbackController pause];
-//    }
-}
-
-#pragma mark - IMAPlaybackSessionDelegate Methods
-
-- (void)willCallIMAAdsLoaderRequestAdsWithRequest:(IMAAdsRequest *)adsRequest forPosition:(NSTimeInterval)position
-{
-    // for demo purposes, increase the VAST ad load timeout.
-    //    adsRequest.vastLoadTimeout = 3000.;
-    //NSLog(@"BC - DEBUG - IMAAdsRequest.vastLoadTimeout set to %.1f milliseconds.", adsRequest.vastLoadTimeout);
 }
 
 #pragma mark - IMALinkOpenerDelegate Methods
