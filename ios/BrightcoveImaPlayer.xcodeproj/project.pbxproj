@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		005769B92C3B565900991AA2 /* UIApplication+CurrentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 005769B72C3B565900991AA2 /* UIApplication+CurrentViewController.m */; };
 		00C76F812C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F762C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.m */; };
 		00C76F822C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F782C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.m */; };
 		00C76F832C2B776E0018B481 /* BrightcoveIMAPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F792C2B776E0018B481 /* BrightcoveIMAPlayerView.m */; };
 		00C76F842C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F7B2C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m */; };
 		00C76F8D2C2B77E00018B481 /* BrightcoveImaPlayerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F8C2C2B77E00018B481 /* BrightcoveImaPlayerTest.m */; };
 		00C76F8E2C2B77E00018B481 /* libBrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libBrightcoveImaPlayer.a */; };
-		5B82762D46AA5407245ED2A4 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA52A7F44A339F356FE07D9 /* libPods-BrightcoveImaPlayerTest.a */; };
-		89C9081273533D9DCE7A58A2 /* libPods-BrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF3BFB967C95F76D404DA2EA /* libPods-BrightcoveImaPlayer.a */; };
+		30936A6FF83DFE2FDBBDDF18 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */; };
+		8477D87543B842711F8A3573 /* libPods-BrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		005769B62C3B565900991AA2 /* UIApplication+CurrentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+CurrentViewController.h"; sourceTree = "<group>"; };
+		005769B72C3B565900991AA2 /* UIApplication+CurrentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+CurrentViewController.m"; sourceTree = "<group>"; };
 		00C76F762C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcoveIMAPlayerPosterViewManager.m; sourceTree = "<group>"; };
 		00C76F772C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcoveIMAPlayerPosterViewManager.h; sourceTree = "<group>"; };
 		00C76F782C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcoveIMAPlayerPosterView.m; sourceTree = "<group>"; };
@@ -51,12 +54,12 @@
 		00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrightcoveImaPlayerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00C76F8C2C2B77E00018B481 /* BrightcoveImaPlayerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightcoveImaPlayerTest.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libBrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBrightcoveImaPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CA52A7F44A339F356FE07D9 /* libPods-BrightcoveImaPlayerTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayerTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6584BB542EDAAE2FE11E0EF8 /* Pods-BrightcoveImaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.release.xcconfig"; sourceTree = "<group>"; };
-		6D87441F243108E5F5115DE8 /* Pods-BrightcoveImaPlayerTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.release.xcconfig"; sourceTree = "<group>"; };
-		E2A44BB8D5762AF50A18EF87 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.debug.xcconfig"; sourceTree = "<group>"; };
-		EE75AFEE25E7FCA6FEE4E3F3 /* Pods-BrightcoveImaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		FF3BFB967C95F76D404DA2EA /* libPods-BrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.release.xcconfig"; sourceTree = "<group>"; };
+		E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayerTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00C76F8E2C2B77E00018B481 /* libBrightcoveImaPlayer.a in Frameworks */,
-				5B82762D46AA5407245ED2A4 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */,
+				30936A6FF83DFE2FDBBDDF18 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,13 +76,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89C9081273533D9DCE7A58A2 /* libPods-BrightcoveImaPlayer.a in Frameworks */,
+				8477D87543B842711F8A3573 /* libPods-BrightcoveImaPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		005769B82C3B565900991AA2 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				005769B62C3B565900991AA2 /* UIApplication+CurrentViewController.h */,
+				005769B72C3B565900991AA2 /* UIApplication+CurrentViewController.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		00C76F8B2C2B77E00018B481 /* BrightcoveImaPlayerTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,10 +111,10 @@
 		402489893E2B8B096C217C3C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EE75AFEE25E7FCA6FEE4E3F3 /* Pods-BrightcoveImaPlayer.debug.xcconfig */,
-				6584BB542EDAAE2FE11E0EF8 /* Pods-BrightcoveImaPlayer.release.xcconfig */,
-				E2A44BB8D5762AF50A18EF87 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */,
-				6D87441F243108E5F5115DE8 /* Pods-BrightcoveImaPlayerTest.release.xcconfig */,
+				87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */,
+				E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */,
+				EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */,
+				A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -110,6 +122,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				005769B82C3B565900991AA2 /* Categories */,
 				00C76F802C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.h */,
 				00C76F782C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.m */,
 				00C76F772C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.h */,
@@ -122,15 +135,15 @@
 				134814211AA4EA7D00B7C361 /* Products */,
 				00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */,
 				402489893E2B8B096C217C3C /* Pods */,
-				6F96AAD8C768EC28637AD6E9 /* Frameworks */,
+				79619A0BCE6A237F859C7E80 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		6F96AAD8C768EC28637AD6E9 /* Frameworks */ = {
+		79619A0BCE6A237F859C7E80 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FF3BFB967C95F76D404DA2EA /* libPods-BrightcoveImaPlayer.a */,
-				2CA52A7F44A339F356FE07D9 /* libPods-BrightcoveImaPlayerTest.a */,
+				281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */,
+				EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,12 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00C76F912C2B77E00018B481 /* Build configuration list for PBXNativeTarget "BrightcoveImaPlayerTest" */;
 			buildPhases = (
-				8FEFE25549D3B79AFDDC0EEB /* [CP] Check Pods Manifest.lock */,
+				73733B6F5EAAC3921E55167F /* [CP] Check Pods Manifest.lock */,
 				00C76F862C2B77E00018B481 /* Sources */,
 				00C76F872C2B77E00018B481 /* Frameworks */,
 				00C76F882C2B77E00018B481 /* Resources */,
-				F1DCD0FFC975B77EA9A88D82 /* [CP] Copy Pods Resources */,
-				6ABF94D179230956E4DBD622 /* [CP] Embed Pods Frameworks */,
+				45B587712D7C5D253BC05E01 /* [CP] Embed Pods Frameworks */,
+				1D1D80C97EAF5DB4DB5B9EB9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -163,7 +176,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "BrightcoveImaPlayer" */;
 			buildPhases = (
-				AA571516B8CBA6EAA449F9B5 /* [CP] Check Pods Manifest.lock */,
+				9C3B64AE1992D4CD53484BAB /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -225,73 +238,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6ABF94D179230956E4DBD622 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh",
-				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
-				"${PODS_ROOT}/Brightcove-Player-IMA/ios/BrightcoveIMA.framework",
-				"${PODS_ROOT}/GoogleAds-IMA-iOS-SDK/GoogleInteractiveMediaAds.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcoveIMA.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleInteractiveMediaAds.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8FEFE25549D3B79AFDDC0EEB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrightcoveImaPlayerTest-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AA571516B8CBA6EAA449F9B5 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrightcoveImaPlayer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F1DCD0FFC975B77EA9A88D82 /* [CP] Copy Pods Resources */ = {
+		1D1D80C97EAF5DB4DB5B9EB9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -319,6 +266,72 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		45B587712D7C5D253BC05E01 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh",
+				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+				"${PODS_ROOT}/Brightcove-Player-IMA/ios/BrightcoveIMA.framework",
+				"${PODS_ROOT}/GoogleAds-IMA-iOS-SDK/GoogleInteractiveMediaAds.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcoveIMA.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleInteractiveMediaAds.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		73733B6F5EAAC3921E55167F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrightcoveImaPlayerTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9C3B64AE1992D4CD53484BAB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrightcoveImaPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -334,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				005769B92C3B565900991AA2 /* UIApplication+CurrentViewController.m in Sources */,
 				00C76F842C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m in Sources */,
 				00C76F832C2B776E0018B481 /* BrightcoveIMAPlayerView.m in Sources */,
 				00C76F812C2B776E0018B481 /* BrightcoveIMAPlayerPosterViewManager.m in Sources */,
@@ -354,7 +368,7 @@
 /* Begin XCBuildConfiguration section */
 		00C76F922C2B77E00018B481 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2A44BB8D5762AF50A18EF87 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */;
+			baseConfigurationReference = EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -386,7 +400,7 @@
 		};
 		00C76F932C2B77E00018B481 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D87441F243108E5F5115DE8 /* Pods-BrightcoveImaPlayerTest.release.xcconfig */;
+			baseConfigurationReference = A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -511,7 +525,7 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE75AFEE25E7FCA6FEE4E3F3 /* Pods-BrightcoveImaPlayer.debug.xcconfig */;
+			baseConfigurationReference = 87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */;
 			buildSettings = {
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -530,7 +544,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6584BB542EDAAE2FE11E0EF8 /* Pods-BrightcoveImaPlayer.release.xcconfig */;
+			baseConfigurationReference = E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */;
 			buildSettings = {
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

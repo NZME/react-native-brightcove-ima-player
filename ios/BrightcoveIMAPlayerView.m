@@ -1,5 +1,6 @@
 #import "BrightcoveIMAPlayerView.h"
 #import <React/RCTUtils.h>
+#import "UIApplication+CurrentViewController.h"
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
@@ -26,50 +27,12 @@
     return self;
 }
 
-
-- (UIViewController *)topViewController {
-    UIViewController *topViewController = nil;
-
-    if (@available(iOS 13.0, *)) {
-        for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
-            if ([scene isKindOfClass:[UIWindowScene class]]) {
-                UIWindowScene *windowScene = (UIWindowScene *)scene;
-                for (UIWindow *window in windowScene.windows) {
-                    if (window.isKeyWindow) {
-                        topViewController = window.rootViewController;
-                        break;
-                    }
-                }
-                if (topViewController) {
-                    break;
-                }
-            }
-        }
-    } else {
-        topViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    }
-
-    return topViewController;
-}
-
-- (UIViewController *)currentViewController {
-    UIViewController *currentViewController = [self topViewController];
-
-    while (currentViewController.childViewControllers.count > 0) {
-        currentViewController = currentViewController.childViewControllers.firstObject;
-        NSLog(@"currentViewController : %@", currentViewController);
-    }
-
-    NSLog(@"current is : %@", currentViewController);
-    return currentViewController;
-}
-
 #pragma mark - Setup
 
 - (void)setupWithSettings:(NSDictionary*)settings {
     @try {
         // Current View Controller
-        UIViewController * currentViewController = [self currentViewController];
+        UIViewController * currentViewController = [[UIApplication sharedApplication] currentViewController];
         
         // Create and configure options for the Brightcove player
         BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
