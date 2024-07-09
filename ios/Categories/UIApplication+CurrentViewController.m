@@ -41,16 +41,6 @@
                 return [self getVisibleViewControllerFrom:childVC];
             }
         }
-    } else if ([vc isKindOfClass:[UISplitViewController class]]) {
-        UISplitViewController *splitViewController = (UISplitViewController *)vc;
-        UIViewController *visibleVC = splitViewController.viewControllers.lastObject; // Get the secondary view controller
-        if (visibleVC.view.window) {
-            return [self getVisibleViewControllerFrom:visibleVC];
-        }
-        UIViewController *primaryVC = splitViewController.viewControllers.firstObject; // Get the primary view controller
-        if (primaryVC.view.window) {
-            return [self getVisibleViewControllerFrom:primaryVC];
-        }
     } else if (vc.childViewControllers.count > 0) {
         return [self getVisibleViewControllerFrom:vc.childViewControllers.firstObject];
     }

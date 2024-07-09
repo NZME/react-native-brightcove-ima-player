@@ -22,10 +22,6 @@ target 'BrightcoveImaPlayer' do
   pod 'Google-Mobile-Ads-SDK', '~> 10.10.0'
 end
 
-target 'BrightcoveImaPlayerTest' do
-  inherit! :search_paths
-end
-
 post_install do |installer|
   installer.pods_project.targets.each do |target| 
     

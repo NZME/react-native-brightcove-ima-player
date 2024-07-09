@@ -14,7 +14,12 @@
 		00C76F842C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F7B2C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m */; };
 		00C76F8D2C2B77E00018B481 /* BrightcoveImaPlayerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C76F8C2C2B77E00018B481 /* BrightcoveImaPlayerTest.m */; };
 		00C76F8E2C2B77E00018B481 /* libBrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libBrightcoveImaPlayer.a */; };
-		30936A6FF83DFE2FDBBDDF18 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */; };
+		00EB79CB2C3CA46F0015BF63 /* UIApplication_CurrentViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EB79CA2C3CA46F0015BF63 /* UIApplication_CurrentViewControllerTests.m */; };
+		00EB79CC2C3CA4B30015BF63 /* UIApplication+CurrentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 005769B72C3B565900991AA2 /* UIApplication+CurrentViewController.m */; };
+		00EB79D42C3CA9540015BF63 /* TestHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EB79D32C3CA9540015BF63 /* TestHostApp.swift */; };
+		00EB79D62C3CA9540015BF63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EB79D52C3CA9540015BF63 /* ContentView.swift */; };
+		00EB79D82C3CA9560015BF63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00EB79D72C3CA9560015BF63 /* Assets.xcassets */; };
+		00EB79DB2C3CA9560015BF63 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00EB79DA2C3CA9560015BF63 /* Preview Assets.xcassets */; };
 		8477D87543B842711F8A3573 /* libPods-BrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +30,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 58B511DA1A9E6C8500147676;
 			remoteInfo = BrightcoveImaPlayer;
+		};
+		00EB79DF2C3CA96C0015BF63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B511D31A9E6C8500147676 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00EB79D02C3CA9540015BF63;
+			remoteInfo = TestHost;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -53,13 +65,16 @@
 		00C76F802C2B776E0018B481 /* BrightcoveIMAPlayerPosterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcoveIMAPlayerPosterView.h; sourceTree = "<group>"; };
 		00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrightcoveImaPlayerTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00C76F8C2C2B77E00018B481 /* BrightcoveImaPlayerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightcoveImaPlayerTest.m; sourceTree = "<group>"; };
+		00EB79CA2C3CA46F0015BF63 /* UIApplication_CurrentViewControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIApplication_CurrentViewControllerTests.m; sourceTree = "<group>"; };
+		00EB79D12C3CA9540015BF63 /* TestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		00EB79D32C3CA9540015BF63 /* TestHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHostApp.swift; sourceTree = "<group>"; };
+		00EB79D52C3CA9540015BF63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		00EB79D72C3CA9560015BF63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		00EB79DA2C3CA9560015BF63 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libBrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBrightcoveImaPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.release.xcconfig"; sourceTree = "<group>"; };
 		E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.release.xcconfig"; sourceTree = "<group>"; };
-		EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayerTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayerTest.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +83,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				00C76F8E2C2B77E00018B481 /* libBrightcoveImaPlayer.a in Frameworks */,
-				30936A6FF83DFE2FDBBDDF18 /* libPods-BrightcoveImaPlayerTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00EB79CE2C3CA9540015BF63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,9 +116,37 @@
 		00C76F8B2C2B77E00018B481 /* BrightcoveImaPlayerTest */ = {
 			isa = PBXGroup;
 			children = (
+				00EB79C92C3CA4590015BF63 /* Categories */,
 				00C76F8C2C2B77E00018B481 /* BrightcoveImaPlayerTest.m */,
 			);
 			path = BrightcoveImaPlayerTest;
+			sourceTree = "<group>";
+		};
+		00EB79C92C3CA4590015BF63 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				00EB79CA2C3CA46F0015BF63 /* UIApplication_CurrentViewControllerTests.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		00EB79D22C3CA9540015BF63 /* TestHost */ = {
+			isa = PBXGroup;
+			children = (
+				00EB79D32C3CA9540015BF63 /* TestHostApp.swift */,
+				00EB79D52C3CA9540015BF63 /* ContentView.swift */,
+				00EB79D72C3CA9560015BF63 /* Assets.xcassets */,
+				00EB79D92C3CA9560015BF63 /* Preview Content */,
+			);
+			path = TestHost;
+			sourceTree = "<group>";
+		};
+		00EB79D92C3CA9560015BF63 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				00EB79DA2C3CA9560015BF63 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
@@ -113,8 +162,6 @@
 			children = (
 				87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */,
 				E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */,
-				EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */,
-				A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -132,10 +179,12 @@
 				00C76F7A2C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.h */,
 				00C76F7B2C2B776E0018B481 /* BrightcoveIMAPlayerViewManager.m */,
 				00C76F8B2C2B77E00018B481 /* BrightcoveImaPlayerTest */,
+				00EB79D22C3CA9540015BF63 /* TestHost */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */,
 				402489893E2B8B096C217C3C /* Pods */,
 				79619A0BCE6A237F859C7E80 /* Frameworks */,
+				00EB79D12C3CA9540015BF63 /* TestHost.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -143,7 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */,
-				EBB6CFBF828E212FEBA51E7C /* libPods-BrightcoveImaPlayerTest.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -155,22 +203,37 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00C76F912C2B77E00018B481 /* Build configuration list for PBXNativeTarget "BrightcoveImaPlayerTest" */;
 			buildPhases = (
-				73733B6F5EAAC3921E55167F /* [CP] Check Pods Manifest.lock */,
 				00C76F862C2B77E00018B481 /* Sources */,
 				00C76F872C2B77E00018B481 /* Frameworks */,
 				00C76F882C2B77E00018B481 /* Resources */,
-				45B587712D7C5D253BC05E01 /* [CP] Embed Pods Frameworks */,
-				1D1D80C97EAF5DB4DB5B9EB9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				00EB79E02C3CA96C0015BF63 /* PBXTargetDependency */,
 				00C76F902C2B77E00018B481 /* PBXTargetDependency */,
 			);
 			name = BrightcoveImaPlayerTest;
 			productName = BrightcoveImaPlayerTest;
 			productReference = 00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		00EB79D02C3CA9540015BF63 /* TestHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00EB79DC2C3CA9560015BF63 /* Build configuration list for PBXNativeTarget "TestHost" */;
+			buildPhases = (
+				00EB79CD2C3CA9540015BF63 /* Sources */,
+				00EB79CE2C3CA9540015BF63 /* Frameworks */,
+				00EB79CF2C3CA9540015BF63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestHost;
+			productName = TestHost;
+			productReference = 00EB79D12C3CA9540015BF63 /* TestHost.app */;
+			productType = "com.apple.product-type.application";
 		};
 		58B511DA1A9E6C8500147676 /* BrightcoveImaPlayer */ = {
 			isa = PBXNativeTarget;
@@ -196,10 +259,16 @@
 		58B511D31A9E6C8500147676 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00C76F892C2B77E00018B481 = {
+						CreatedOnToolsVersion = 15.4;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 00EB79D02C3CA9540015BF63;
+					};
+					00EB79D02C3CA9540015BF63 = {
 						CreatedOnToolsVersion = 15.4;
 						ProvisioningStyle = Automatic;
 					};
@@ -223,6 +292,7 @@
 			targets = (
 				58B511DA1A9E6C8500147676 /* BrightcoveImaPlayer */,
 				00C76F892C2B77E00018B481 /* BrightcoveImaPlayerTest */,
+				00EB79D02C3CA9540015BF63 /* TestHost */,
 			);
 		};
 /* End PBXProject section */
@@ -235,81 +305,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		00EB79CF2C3CA9540015BF63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00EB79DB2C3CA9560015BF63 /* Preview Assets.xcassets in Resources */,
+				00EB79D82C3CA9560015BF63 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1D1D80C97EAF5DB4DB5B9EB9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/Brightcove-Player-Core/BCOVPUIResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUserMessagingPlatform/UserMessagingPlatformResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities_Privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises_Privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb_Privacy.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BCOVPUIResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UserMessagingPlatformResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleUtilities_Privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FBLPromises_Privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/nanopb_Privacy.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		45B587712D7C5D253BC05E01 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh",
-				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
-				"${PODS_ROOT}/Brightcove-Player-IMA/ios/BrightcoveIMA.framework",
-				"${PODS_ROOT}/GoogleAds-IMA-iOS-SDK/GoogleInteractiveMediaAds.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcoveIMA.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleInteractiveMediaAds.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrightcoveImaPlayerTest/Pods-BrightcoveImaPlayerTest-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		73733B6F5EAAC3921E55167F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrightcoveImaPlayerTest-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9C3B64AE1992D4CD53484BAB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -340,6 +347,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				00C76F8D2C2B77E00018B481 /* BrightcoveImaPlayerTest.m in Sources */,
+				00EB79CC2C3CA4B30015BF63 /* UIApplication+CurrentViewController.m in Sources */,
+				00EB79CB2C3CA46F0015BF63 /* UIApplication_CurrentViewControllerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00EB79CD2C3CA9540015BF63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00EB79D62C3CA9540015BF63 /* ContentView.swift in Sources */,
+				00EB79D42C3CA9540015BF63 /* TestHostApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,13 +381,18 @@
 			target = 58B511DA1A9E6C8500147676 /* BrightcoveImaPlayer */;
 			targetProxy = 00C76F8F2C2B77E00018B481 /* PBXContainerItemProxy */;
 		};
+		00EB79E02C3CA96C0015BF63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00EB79D02C3CA9540015BF63 /* TestHost */;
+			targetProxy = 00EB79DF2C3CA96C0015BF63 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		00C76F922C2B77E00018B481 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF2EF0B2A061D95020BF2997 /* Pods-BrightcoveImaPlayerTest.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -395,13 +418,14 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TestHost";
 			};
 			name = Debug;
 		};
 		00C76F932C2B77E00018B481 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A7716B49A9DDA652CC789E3F /* Pods-BrightcoveImaPlayerTest.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -426,6 +450,94 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.nzme.BrightcoveImaPlayerTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TestHost";
+			};
+			name = Release;
+		};
+		00EB79DD2C3CA9560015BF63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"TestHost/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nzme.TestHost;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		00EB79DE2C3CA9560015BF63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "\"TestHost/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nzme.TestHost;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -569,6 +681,15 @@
 			buildConfigurations = (
 				00C76F922C2B77E00018B481 /* Debug */,
 				00C76F932C2B77E00018B481 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00EB79DC2C3CA9560015BF63 /* Build configuration list for PBXNativeTarget "TestHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00EB79DD2C3CA9560015BF63 /* Debug */,
+				00EB79DE2C3CA9560015BF63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
