@@ -1,6 +1,6 @@
-#import "UIApplication+CurrentViewController.h"
+#import "UIApplication+CurrentNonAdViewController.h"
 
-@implementation UIApplication (CurrentViewController)
+@implementation UIApplication (CurrentNonAdViewController)
 
 - (UIViewController *)topViewController {
     UIViewController *topViewController = nil;
@@ -27,33 +27,34 @@
     return topViewController;
 }
 
-- (UIViewController *)getVisibleViewControllerFrom:(UIViewController *)vc {
+- (UIViewController *)getVisibleNonAdViewControllerFrom:(UIViewController *)vc {
     if ([vc isKindOfClass:[UINavigationController class]]) {
-        return [self getVisibleViewControllerFrom:[(UINavigationController *)vc visibleViewController]];
+        return [self getVisibleNonAdViewControllerFrom:[(UINavigationController *)vc visibleViewController]];
     } else if ([vc isKindOfClass:[UITabBarController class]]) {
-        return [self getVisibleViewControllerFrom:[(UITabBarController *)vc selectedViewController]];
+        return [self getVisibleNonAdViewControllerFrom:[(UITabBarController *)vc selectedViewController]];
     } else if (vc.presentedViewController) {
-        return [self getVisibleViewControllerFrom:vc.presentedViewController];
+        return [self getVisibleNonAdViewControllerFrom:vc.presentedViewController];
     } else if ([vc isKindOfClass:[UIPageViewController class]]) {
         UIPageViewController *pageViewController = (UIPageViewController *)vc;
         for (UIViewController *childVC in pageViewController.viewControllers) {
             if (childVC.view.window) {
-                return [self getVisibleViewControllerFrom:childVC];
+                return [self getVisibleNonAdViewControllerFrom:childVC];
             }
         }
-    } else if (vc.childViewControllers.count > 0) {
-        return [self getVisibleViewControllerFrom:vc.childViewControllers.firstObject];
+    } else if (vc.childViewControllers.count > 0 ) {
+        // Avoid the IMAAdViewController since we cannot attached views to it.
+        if(![NSStringFromClass([vc.childViewControllers.firstObject class]) isEqualToString:@"IMAAdViewController"]){
+            return [self getVisibleNonAdViewControllerFrom:vc.childViewControllers.firstObject];
+        }
     }
     
     return vc;
 }
 
-- (UIViewController *)currentViewController {
+- (UIViewController *)currentNonAdViewController {
     UIViewController *currentViewController = [self topViewController];
-    currentViewController = [self getVisibleViewControllerFrom:currentViewController];
+    currentViewController = [self getVisibleNonAdViewControllerFrom:currentViewController];
     return currentViewController;
 }
 
 @end
-
-

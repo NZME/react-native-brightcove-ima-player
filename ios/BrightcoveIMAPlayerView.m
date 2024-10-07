@@ -1,6 +1,6 @@
 #import "BrightcoveIMAPlayerView.h"
 #import <React/RCTUtils.h>
-#import "UIApplication+CurrentViewController.h"
+#import "UIApplication+CurrentNonAdViewController.h"
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
@@ -32,7 +32,7 @@
 - (void)setupWithSettings:(NSDictionary*)settings {
     @try {
         // Current View Controller
-        UIViewController * currentViewController = [[UIApplication sharedApplication] currentViewController];
+        UIViewController * currentViewController = [[UIApplication sharedApplication] currentNonAdViewController];
         
         // Create and configure options for the Brightcove player
         BCOVPUIPlayerViewOptions *options = [[BCOVPUIPlayerViewOptions alloc] init];
