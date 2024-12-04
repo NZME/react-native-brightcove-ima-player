@@ -20,7 +20,7 @@
 		00EB79D62C3CA9540015BF63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EB79D52C3CA9540015BF63 /* ContentView.swift */; };
 		00EB79D82C3CA9560015BF63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00EB79D72C3CA9560015BF63 /* Assets.xcassets */; };
 		00EB79DB2C3CA9560015BF63 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00EB79DA2C3CA9560015BF63 /* Preview Assets.xcassets */; };
-		8477D87543B842711F8A3573 /* libPods-BrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */; };
+		EB9DAE5F558F06030B5C112F /* libPods-BrightcoveImaPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C98675B4A8FFA292A0C7DD8 /* libPods-BrightcoveImaPlayer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,9 +72,9 @@
 		00EB79D72C3CA9560015BF63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00EB79DA2C3CA9560015BF63 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libBrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBrightcoveImaPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		2C98675B4A8FFA292A0C7DD8 /* libPods-BrightcoveImaPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrightcoveImaPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3834B5CFC0B49A103E78D31A /* Pods-BrightcoveImaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.release.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		C4B7DDF72F6876765C8E2032 /* Pods-BrightcoveImaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrightcoveImaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BrightcoveImaPlayer/Pods-BrightcoveImaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8477D87543B842711F8A3573 /* libPods-BrightcoveImaPlayer.a in Frameworks */,
+				EB9DAE5F558F06030B5C112F /* libPods-BrightcoveImaPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,8 +160,8 @@
 		402489893E2B8B096C217C3C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */,
-				E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */,
+				C4B7DDF72F6876765C8E2032 /* Pods-BrightcoveImaPlayer.debug.xcconfig */,
+				3834B5CFC0B49A103E78D31A /* Pods-BrightcoveImaPlayer.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -183,15 +183,15 @@
 				134814211AA4EA7D00B7C361 /* Products */,
 				00C76F8A2C2B77E00018B481 /* BrightcoveImaPlayerTest.xctest */,
 				402489893E2B8B096C217C3C /* Pods */,
-				79619A0BCE6A237F859C7E80 /* Frameworks */,
 				00EB79D12C3CA9540015BF63 /* TestHost.app */,
+				AC291CA7C59D3661DADE7ACF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		79619A0BCE6A237F859C7E80 /* Frameworks */ = {
+		AC291CA7C59D3661DADE7ACF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				281CE4B217DE393F734378A6 /* libPods-BrightcoveImaPlayer.a */,
+				2C98675B4A8FFA292A0C7DD8 /* libPods-BrightcoveImaPlayer.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -239,7 +239,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "BrightcoveImaPlayer" */;
 			buildPhases = (
-				9C3B64AE1992D4CD53484BAB /* [CP] Check Pods Manifest.lock */,
+				425B5497D689E7835C315CDF /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -317,7 +317,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9C3B64AE1992D4CD53484BAB /* [CP] Check Pods Manifest.lock */ = {
+		425B5497D689E7835C315CDF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -637,7 +637,7 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 87E07B54F38DD0389DBD6C19 /* Pods-BrightcoveImaPlayer.debug.xcconfig */;
+			baseConfigurationReference = C4B7DDF72F6876765C8E2032 /* Pods-BrightcoveImaPlayer.debug.xcconfig */;
 			buildSettings = {
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -656,7 +656,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E614BABB97F4A410D95D77A2 /* Pods-BrightcoveImaPlayer.release.xcconfig */;
+			baseConfigurationReference = 3834B5CFC0B49A103E78D31A /* Pods-BrightcoveImaPlayer.release.xcconfig */;
 			buildSettings = {
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
