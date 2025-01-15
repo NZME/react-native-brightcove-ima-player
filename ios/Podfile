@@ -1,0 +1,36 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/brightcove/BrightcoveSpecs.git'
+
+platform :ios, '12.4'
+
+react_native_path = '../node_modules/react-native'
+
+target 'BrightcoveImaPlayer' do
+
+  # React Native dependencies
+  require_relative '../node_modules/react-native/scripts/react_native_pods'
+  use_react_native!(
+    path: react_native_path,
+    project_path: '..',
+    # Uncomment the line below if you need to add specific subspecs
+    # subspecs: %w[Core CxxBridge DevSupport RCTText RCTImage RCTLinking RCTNetwork RCTSettings RCTVibration RCTWebSocket],
+    # Add any custom configuration options here
+  )
+
+  # Pods for BrightcoveImaPlayer
+  pod 'Brightcove-Player-IMA', '6.12.0'
+  pod 'Google-Mobile-Ads-SDK', '~> 10.10.0'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target| 
+    
+    # Fix for old react native versions on Xcode 15 (Resolved in RN 0.72.5 - https://github.com/facebook/react-native/releases/tag/v0.72.5)
+    # Fixes error: "no template named 'unary_function' in namespace 'std'; did you mean '__unary_function'?""
+    # unary_function and binary_function are no longer provided in C++17 and newer Standard modes. 
+    # They can be re-enabled with _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION.
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
+    end
+  end
+end

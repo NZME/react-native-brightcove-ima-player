@@ -10,12 +10,13 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "11.0" }
+  s.platforms    = { :ios => "12.4" }
   s.source       = { :git => "https://github.com/NZME/react-native-brightcove-ima-player.git", :tag => "v#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm}"
+  s.exclude_files = ["ios/BrightcoveImaPlayerTest/**/*","ios/Pod*","ios/Pods/**/*"]
 
   s.dependency "React-Core"
   s.dependency "Brightcove-Player-IMA", '6.10.6'
-  s.dependency 'Google-Mobile-Ads-SDK', '~> 9.14.0'
+  s.dependency 'Google-Mobile-Ads-SDK', '~> 10.10.0'
 end
