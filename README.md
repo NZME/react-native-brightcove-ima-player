@@ -74,6 +74,7 @@ import { BrightcoveIMAPlayer } from "react-native-brightcove-ima-player";
 | playbackRate           | number   | Set playback speed scale. Default is `1`                                            |                              |
 | disableDefaultControl  | boolean  | Disable default player control. Set `true` when you implement own video controller. |                              |
 | onAdsLoaded           | Function | Indicates the IMA ads manager has loaded                                             |                              |
+| onAdsPlaying           | Function | Indicates the IMA ads playback starts                                            |                              |
 | onReady                | Function | Indicates the video can be played back                                              |                              |
 | onPlay                 | Function | Indicates the video playback starts                                                 |                              |
 | onPause                | Function | Indicates the video is paused                                                       |                              |
