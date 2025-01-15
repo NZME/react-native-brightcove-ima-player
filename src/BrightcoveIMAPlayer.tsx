@@ -68,6 +68,9 @@ type BrightcoveIMAPlayerProps = ViewProps & {
   onProgress?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventProgress>
   ) => void;
+  onAdsPlaying?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
   onChangeDuration?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventDuration>
   ) => void;
