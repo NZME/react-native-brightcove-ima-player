@@ -392,14 +392,15 @@
             self.onAdsLoaded(@{});
         }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdProgress) {
-        //Additional RN function to determine when an ad starts playing. We use this event to determine when to hide the activity indicator as the ad has not displayed yet when the onAdsLoaded event is fired
-        if (self.onAdsPlaying) {
-            self.onAdsPlaying(@{});
-        }
         // catches scroll away before ads start bug
         if (!_inViewPort) {
             [self.playbackController pauseAd];
             [self.playbackController pause];
+        }
+    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdEnter) {
+        //Additional RN function to determine when an ad starts playing. We use this event to determine when to hide the activity indicator as the ad has not displayed yet when the onAdsLoaded event is fired
+        if (self.onAdsPlaying) {
+            self.onAdsPlaying(@{});
         }
     }
     
