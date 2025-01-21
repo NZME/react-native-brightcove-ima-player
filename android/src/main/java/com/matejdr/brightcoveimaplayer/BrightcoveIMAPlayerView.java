@@ -206,7 +206,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
       }
     });
 
-      eventEmitter.on(EventType.AD_PROGRESS, new EventListener() {
+      eventEmitter.on(EventType.AD_BREAK_STARTED, new EventListener() {
       @Override
       public void processEvent(Event e) {
         WritableMap event = Arguments.createMap();
