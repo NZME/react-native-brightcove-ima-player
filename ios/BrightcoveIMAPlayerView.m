@@ -47,7 +47,7 @@
         options.presentingViewController = RCTPresentedViewController();
         
         // Enable automatic control type selection
-        options.automaticControlTypeSelection = NO;
+        options.automaticControlTypeSelection = YES;
         
         // Create and configure the basic control view
         BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
