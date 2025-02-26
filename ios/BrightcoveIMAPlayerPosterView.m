@@ -53,12 +53,19 @@
 - (void)loadPoster {
     if (!_playbackService) return;
     if (_videoId) {
-        [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+        [_playbackService findVideoWithConfiguration:(NSDictionary *)_videoId queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self loadImage:video.properties[kBCOVVideoPropertyKeyPoster]];
             }
         }];
     }
+//    if (_videoId) {
+//        [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+//            if (video) {
+//                [self loadImage:video.properties[kBCOVVideoPropertyKeyPoster]];
+//            }
+//        }];
+//    }
 }
 
 -(void)loadImage:(NSString *)url{
