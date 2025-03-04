@@ -59,8 +59,6 @@
         [_playbackService findVideoWithConfiguration:(NSDictionary *)configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self loadImage:video.properties[kBCOVVideoPropertyKeyPoster]];
-            } else {
-                 NSLog(@"BC - DEBUG response: %@, %@", jsonResponse, error);
             }
         }];
     }
