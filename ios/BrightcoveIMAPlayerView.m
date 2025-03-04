@@ -159,18 +159,15 @@
 - (void)loadMovie {
     if (!_playbackService) return;
     if (_videoId) {
-        [_playbackService findVideoWithConfiguration:(NSDictionary *)_videoId queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+        NSDictionary *configuration = @{
+               @"kBCOVPlaybackServiceConfigurationKeyVideoID" : _videoId,
+        };
+        [_playbackService findVideoWithConfiguration:(NSDictionary *)configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self.playbackController setVideos: @[ video ]];
             }
         }];
     }
-    //        [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-    //            if (video) {
-    //                [self.playbackController setVideos: @[ video ]];
-    //            }
-    //        }];
-    //    }
 }
 
 -(void)dispose {
