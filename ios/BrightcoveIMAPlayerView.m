@@ -160,7 +160,7 @@
     if (!_playbackService) return;
     if (_videoId) {
         NSDictionary *configuration = @{
-               @"kBCOVPlaybackServiceConfigurationKeyVideoID" : _videoId,
+          kBCOVPlaybackServiceConfigurationKeyAssetID:_videoId
         };
         [_playbackService findVideoWithConfiguration:(NSDictionary *)configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
