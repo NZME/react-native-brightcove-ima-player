@@ -123,6 +123,9 @@
         
         // Set the delegate for the playback controller
         _playbackController.delegate = self;
+      
+      // Set PlayerName for Brightcove Analytics
+      _playbackController.analytics.playerName = @"NZH App iOS Player";
         
         // Bypass mute button for audio
         NSError *error = nil;

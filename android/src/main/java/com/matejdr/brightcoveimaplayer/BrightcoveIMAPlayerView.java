@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 
 import com.brightcove.ima.GoogleIMAComponent;
 import com.brightcove.ima.GoogleIMAEventType;
+import com.brightcove.player.analytics.Analytics;
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.CatalogError;
@@ -90,6 +91,10 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     this.addView(this.brightcoveVideoView);
     this.brightcoveVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     this.brightcoveVideoView.finishInitialization();
+
+    // Set Plaayer Name in Brightcove Analytics
+    Analytics analytics = this.brightcoveVideoView.getAnalytics();
+    analytics.setPlayerName("NZH App Android Player");
 
     this.requestLayout();
 
