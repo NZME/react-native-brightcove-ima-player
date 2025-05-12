@@ -48,6 +48,11 @@
         
         // Enable automatic control type selection
         options.automaticControlTypeSelection = YES;
+
+        // Enable PiP (Picture in Picture, aka Pinning)
+        // From 'settings' object on javascript component
+        BOOL showPictureInPictureButton = [settings objectForKey:@"showPictureInPictureButton"] != nil ? [[settings objectForKey:@"showPictureInPictureButton"] boolValue] : NO;
+        options.showPictureInPictureButton = showPictureInPictureButton;
         
         // Create and configure the basic control view
         BCOVPUIBasicControlView *control = [BCOVPUIBasicControlView basicControlViewWithVODLayout];
@@ -132,7 +137,7 @@
         BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
         BOOL autoPlay = NO; // [settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
         BOOL allowsExternalPlayback = [settings objectForKey:@"allowsExternalPlayback"] != nil ? [[settings objectForKey:@"allowsExternalPlayback"] boolValue] : YES;
-        
+
         _playbackController.autoAdvance = autoAdvance;
         _playbackController.autoPlay = autoPlay;
         _playbackController.allowsExternalPlayback = allowsExternalPlayback;
@@ -488,6 +493,29 @@
     if (_adsPlaying) {
         [self.playbackController resumeAd];
     }
+}
+
+#pragma mark - PiP Picture in Picture
+
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"pictureInPictureControllerDidStartPicture");
+}
+
+- (void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"pictureInPictureControllerWillStartPicture");
+}
+
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"pictureInPictureControllerDidStopPicture");
+}
+
+- (void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    NSLog(@"pictureInPictureControllerWillStopPicture");
+}
+
+- (void)pictureInPictureController:(AVPictureInPictureController *)pictureInPictureController
+      failedToStartPictureInPictureWithError:(NSError *)error {
+    NSLog(@"failedToStartPictureInPictureWithError: %@", error.localizedDescription);
 }
 
 @end

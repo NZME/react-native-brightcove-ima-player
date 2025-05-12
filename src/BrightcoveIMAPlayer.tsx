@@ -20,6 +20,7 @@ type TBrightcoveIMAPlayerSettings = {
   autoPlay?: boolean;
   allowsExternalPlayback?: boolean; // iOS only
   publisherProvidedID?: string;
+  showPictureInPictureButton?: boolean;
 };
 
 type TBrightcoveIMAPlayerEventBase = {
