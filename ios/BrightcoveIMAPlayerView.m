@@ -124,8 +124,7 @@
         // Set the delegate for the playback controller
         _playbackController.delegate = self;
       
-      // Set PlayerName for Brightcove Analytics
-      _playbackController.analytics.playerName = @"NZH App iOS Player";
+
         
         // Bypass mute button for audio
         NSError *error = nil;
@@ -155,6 +154,13 @@
     if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
         _playbackServiceDirty = NO;
         _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
+    }
+}
+
+- (void)setAnalyticsPlayerName {
+    if (_playerName) {
+        // Set PlayerName for Brightcove Analytics
+        _playbackController.analytics.playerName = _playerName;
     }
 }
 
@@ -198,6 +204,11 @@
     _playbackServiceDirty = YES;
     [self setupService];
     [self loadMovie];
+}
+
+- (void)setPlayerName:(NSString *)playerName {
+    _playerName = playerName;
+    [self setAnalyticsPlayerName];
 }
 
 - (void)setAutoPlay:(BOOL)autoPlay {

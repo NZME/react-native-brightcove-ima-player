@@ -62,6 +62,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private String policyKey;
   private String accountId;
   private String videoId;
+  private String playerName;
   private boolean autoPlay = false;
   private boolean playing = false;
   private boolean adsPlaying = false;
@@ -91,10 +92,6 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     this.addView(this.brightcoveVideoView);
     this.brightcoveVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     this.brightcoveVideoView.finishInitialization();
-
-    // Set Plaayer Name in Brightcove Analytics
-    Analytics analytics = this.brightcoveVideoView.getAnalytics();
-    analytics.setPlayerName("NZH App Android Player");
 
     this.requestLayout();
 
@@ -221,6 +218,11 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     });
   
   }
+  public void setAnalyticsPlayerName() {
+      // Set Player Name in Brightcove Analytics
+    Analytics analytics = this.brightcoveVideoView.getAnalytics();
+    analytics.setPlayerName(this.playerName);
+  }
 
   public void setSettings(ReadableMap settings) {
     this.settings = settings;
@@ -243,6 +245,11 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void setVideoId(String videoId) {
     this.videoId = videoId;
     this.loadVideo();
+  }
+
+    public void setPlayerName(String playerName) {
+    this.playerName = playerName;
+    this.setAnalyticsPlayerName();
   }
 
   public void setAutoPlay(boolean autoPlay) {

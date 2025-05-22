@@ -41,6 +41,7 @@ type TBrightcoveIMAPlayerEventBuffer = TBrightcoveIMAPlayerEventBase & {
 type BrightcoveIMAPlayerProps = ViewProps & {
   accountId: string;
   policyKey: string;
+  playerName: string;
   videoId: string;
   settings: TBrightcoveIMAPlayerSettings;
   autoPlay?: boolean;

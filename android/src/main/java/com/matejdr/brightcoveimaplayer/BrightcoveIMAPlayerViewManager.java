@@ -74,6 +74,11 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
     view.setVideoId(videoId);
   }
 
+    @ReactProp(name = "playerName")
+  public void setPlayerName(BrightcoveIMAPlayerView view, String playerName) {
+    view.setPlayerName(playerName);
+  }
+
   @ReactProp(name = "autoPlay")
   public void setAutoPlay(BrightcoveIMAPlayerView view, boolean autoPlay) {
     view.setAutoPlay(autoPlay);

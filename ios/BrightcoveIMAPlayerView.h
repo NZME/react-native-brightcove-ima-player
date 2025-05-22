@@ -45,6 +45,7 @@
 @property (nonatomic, copy) NSString *videoId;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
+@property (nonatomic, copy) NSString *playerName;
 
 #pragma mark - Event callback properties
 
