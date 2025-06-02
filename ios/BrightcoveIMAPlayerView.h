@@ -45,6 +45,7 @@
 @property (nonatomic, copy) NSString *videoId;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
+@property (nonatomic, copy) NSString *playerName;
 
 #pragma mark - Event callback properties
 
@@ -54,10 +55,12 @@
 @property (nonatomic, copy) RCTDirectEventBlock onPause;
 @property (nonatomic, copy) RCTDirectEventBlock onEnd;
 @property (nonatomic, copy) RCTDirectEventBlock onProgress;
+@property (nonatomic, copy) RCTDirectEventBlock onAdsPlaying;
 @property (nonatomic, copy) RCTDirectEventBlock onChangeDuration;
 @property (nonatomic, copy) RCTDirectEventBlock onUpdateBufferProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onEnterFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onExitFullscreen;
+
 
 #pragma mark - Public methods
 

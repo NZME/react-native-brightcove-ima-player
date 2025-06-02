@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 
 import com.brightcove.ima.GoogleIMAComponent;
 import com.brightcove.ima.GoogleIMAEventType;
+import com.brightcove.player.analytics.Analytics;
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.CatalogError;
@@ -61,6 +62,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private String policyKey;
   private String accountId;
   private String videoId;
+  private String playerName;
   private boolean autoPlay = false;
   private boolean playing = false;
   private boolean adsPlaying = false;
@@ -205,7 +207,21 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_UPDATE_BUFFER_PROGRESS, event);
       }
     });
+
+      eventEmitter.on(EventType.AD_BREAK_STARTED, new EventListener() {
+      @Override
+      public void processEvent(Event e) {
+        WritableMap event = Arguments.createMap();
+        ReactContext reactContext = (ReactContext) BrightcoveIMAPlayerView.this.getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcoveIMAPlayerView.this.getId(), BrightcoveIMAPlayerViewManager.EVENT_ADS_PLAYING, event);
+      }
+    });
   
+  }
+  public void setAnalyticsPlayerName() {
+      // Set Player Name in Brightcove Analytics
+    Analytics analytics = this.brightcoveVideoView.getAnalytics();
+    analytics.setPlayerName(this.playerName);
   }
 
   public void setSettings(ReadableMap settings) {
@@ -229,6 +245,11 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   public void setVideoId(String videoId) {
     this.videoId = videoId;
     this.loadVideo();
+  }
+
+    public void setPlayerName(String playerName) {
+    this.playerName = playerName;
+    this.setAnalyticsPlayerName();
   }
 
   public void setAutoPlay(boolean autoPlay) {

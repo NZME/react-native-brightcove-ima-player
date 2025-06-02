@@ -123,6 +123,8 @@
         
         // Set the delegate for the playback controller
         _playbackController.delegate = self;
+      
+
         
         // Bypass mute button for audio
         NSError *error = nil;
@@ -155,11 +157,21 @@
     }
 }
 
+- (void)setAnalyticsPlayerName {
+    if (_playerName) {
+        // Set PlayerName for Brightcove Analytics
+        _playbackController.analytics.playerName = _playerName;
+    }
+}
+
 #pragma mark - Playback Controls
 - (void)loadMovie {
     if (!_playbackService) return;
     if (_videoId) {
-        [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+        NSDictionary *configuration = @{
+          kBCOVPlaybackServiceConfigurationKeyAssetID:_videoId
+        };
+        [_playbackService findVideoWithConfiguration:(NSDictionary *)configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
                 [self.playbackController setVideos: @[ video ]];
             }
@@ -192,6 +204,11 @@
     _playbackServiceDirty = YES;
     [self setupService];
     [self loadMovie];
+}
+
+- (void)setPlayerName:(NSString *)playerName {
+    _playerName = playerName;
+    [self setAnalyticsPlayerName];
 }
 
 - (void)setAutoPlay:(BOOL)autoPlay {
@@ -396,6 +413,11 @@
         if (!_inViewPort) {
             [self.playbackController pauseAd];
             [self.playbackController pause];
+        }
+    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventAdEnter) {
+        //Additional RN function to determine when an ad starts playing. We use this event to determine when to hide the activity indicator as the ad has not displayed yet when the onAdsLoaded event is fired
+        if (self.onAdsPlaying) {
+            self.onAdsPlaying(@{});
         }
     }
     

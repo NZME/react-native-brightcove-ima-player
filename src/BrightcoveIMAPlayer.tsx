@@ -41,6 +41,7 @@ type TBrightcoveIMAPlayerEventBuffer = TBrightcoveIMAPlayerEventBase & {
 type BrightcoveIMAPlayerProps = ViewProps & {
   accountId: string;
   policyKey: string;
+  playerName: string;
   videoId: string;
   settings: TBrightcoveIMAPlayerSettings;
   autoPlay?: boolean;
@@ -67,6 +68,9 @@ type BrightcoveIMAPlayerProps = ViewProps & {
   onEnd?: (event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>) => void;
   onProgress?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventProgress>
+  ) => void;
+  onAdsPlaying?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
   ) => void;
   onChangeDuration?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventDuration>

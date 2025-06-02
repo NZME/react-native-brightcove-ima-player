@@ -29,6 +29,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public static final String EVENT_PAUSE = "pause";
   public static final String EVENT_END = "end";
   public static final String EVENT_PROGRESS = "progress";
+  public static final String EVENT_ADS_PLAYING = "ads_playing";
   public static final String EVENT_ENTER_FULLSCREEN = "enter_fullscreen";
   public static final String EVENT_EXIT_FULLSCREEN = "exit_fullscreen";
   public static final String EVENT_CHANGE_DURATION = "change_duration";
@@ -71,6 +72,11 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   @ReactProp(name = "videoId")
   public void setVideoId(BrightcoveIMAPlayerView view, String videoId) {
     view.setVideoId(videoId);
+  }
+
+    @ReactProp(name = "playerName")
+  public void setPlayerName(BrightcoveIMAPlayerView view, String playerName) {
+    view.setPlayerName(playerName);
   }
 
   @ReactProp(name = "autoPlay")
@@ -173,6 +179,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
     map.put(EVENT_PAUSE, (Object) MapBuilder.of("registrationName", "onPause"));
     map.put(EVENT_END, (Object) MapBuilder.of("registrationName", "onEnd"));
     map.put(EVENT_PROGRESS, (Object) MapBuilder.of("registrationName", "onProgress"));
+    map.put(EVENT_ADS_PLAYING, (Object) MapBuilder.of("registrationName", "onAdsPlaying"));
     map.put(EVENT_CHANGE_DURATION, (Object) MapBuilder.of("registrationName", "onChangeDuration"));
     map.put(EVENT_UPDATE_BUFFER_PROGRESS, (Object) MapBuilder.of("registrationName", "onUpdateBufferProgress"));
     map.put(EVENT_ENTER_FULLSCREEN, (Object) MapBuilder.of("registrationName", "onEnterFullscreen"));
