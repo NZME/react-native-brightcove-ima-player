@@ -156,6 +156,14 @@ export class BrightcoveIMAPlayer extends Component<BrightcoveIMAPlayerProps> {
     );
   };
 
+  toggleMute = (mute: boolean) => {
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      UIManager.getViewManagerConfig(ComponentName).Commands.toggleMute,
+      [mute]
+    );
+  };
+
   render() {
     return (
       <BrightcoveIMAPlayerView

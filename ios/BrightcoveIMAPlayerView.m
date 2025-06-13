@@ -5,6 +5,8 @@
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
 @property (nonatomic) BOOL isAppInForeground; // App state
+@property (nonatomic) double previousVolume;
+@property (nonatomic) BOOL isMuted;
 
 @end
 
@@ -331,6 +333,21 @@
             [self.playbackController pauseAd];
         }
         [self.playbackController pause];
+    }
+}
+
+- (void)toggleMute:(BOOL)mute {
+    if (mute) {
+        if (!self.isMuted) {
+            self.previousVolume = _targetVolume; // Save current volume
+            [self setVolume:@0];
+            self.isMuted = YES;
+        }
+    } else {
+        if (self.isMuted) {
+            [self setVolume:@(self.previousVolume)]; // Restore volume
+            self.isMuted = NO;
+        }
     }
 }
 

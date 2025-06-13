@@ -28,6 +28,7 @@ RCT_EXPORT_VIEW_PROPERTY(volume, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(bitRate, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(adVideoLoadTimeout, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(playbackRate, NSNumber);
+RCT_EXPORT_VIEW_PROPERTY(muted, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(onAdsLoaded, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPlay, RCTDirectEventBlock);
@@ -107,6 +108,15 @@ RCT_EXPORT_METHOD(dispose:(nonnull NSNumber *)reactTag) {
             [player dispose];
         }
     }];
+}
+
+RCT_EXPORT_METHOD(toggleMute:(nonnull NSNumber *)reactTag mute:(BOOL)mute) {
+  [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+    BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView *)viewRegistry[reactTag];
+    if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
+      [player toggleMute:mute];
+    }
+  }];
 }
 
 @end
