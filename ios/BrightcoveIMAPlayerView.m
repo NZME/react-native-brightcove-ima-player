@@ -7,6 +7,7 @@
 @property (nonatomic) BOOL isAppInForeground; // App state
 @property (nonatomic) double previousVolume;
 @property (nonatomic) BOOL isMuted;
+@property (nonatomic, strong) id<BCOVPlaybackSession> currentSession;
 
 @end
 
@@ -349,6 +350,10 @@
             self.isMuted = NO;
         }
     }
+
+    if (self.currentSession) {
+        self.currentSession.player.muted = self.isMuted;
+    }
 }
 
 #pragma mark - Notification Handling
@@ -373,6 +378,16 @@
             [self.playbackController resumeAd];
         }
     }
+}
+
+#pragma mark - BCOVPlaybackSessionConsumer
+
+- (void)didAdvanceToPlaybackSession:(id<BCOVPlaybackSession>)session {
+    // Store the current playback session
+    self.currentSession = session;
+
+    // Immediately apply the current mute state
+    session.player.muted = self.isMuted;
 }
 
 #pragma mark - BCOVPlaybackControllerBasicDelegate methods
