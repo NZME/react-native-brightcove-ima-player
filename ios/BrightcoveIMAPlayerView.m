@@ -1,10 +1,14 @@
 #import "BrightcoveIMAPlayerView.h"
 #import <React/RCTUtils.h>
 #import "UIApplication+CurrentNonAdViewController.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface BrightcoveIMAPlayerView () <IMALinkOpenerDelegate, BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, BCOVPlaybackControllerAdsDelegate, BCOVIMAPlaybackSessionDelegate>
 
 @property (nonatomic) BOOL isAppInForeground; // App state
+@property (nonatomic) double previousVolume;
+@property (nonatomic) BOOL isMuted;
+@property (nonatomic, weak) IMAAdsManager *currentAdsManager;
 
 @end
 
@@ -128,8 +132,27 @@
         
         // Bypass mute button for audio
         NSError *error = nil;
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-        
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+
+        [session setCategory:AVAudioSessionCategoryPlayback error:&error];
+
+        // New additions from setupAudioObservers:
+        // 1. Activate the session
+        [session setActive:YES error:&error];
+
+        // 2. remove any existing observer to prevent duplicates
+        @try {
+            [session removeObserver:self forKeyPath:@"outputVolume"];
+        } @catch (NSException *exception) {
+            // Observer wasn't registered, that's fine
+        }
+
+        // 3. Add volume change observer
+        [session addObserver:self
+                  forKeyPath:@"outputVolume"
+                  options:NSKeyValueObservingOptionNew
+                  context:nil];
+
         // Configure autoAdvance, autoPlay, and allowsExternalPlayback settings
         BOOL autoAdvance = [settings objectForKey:@"autoAdvance"] != nil ? [[settings objectForKey:@"autoAdvance"] boolValue] : NO;
         BOOL autoPlay = NO; // [settings objectForKey:@"autoPlay"] != nil ? [[settings objectForKey:@"autoPlay"] boolValue] : YES;
@@ -154,6 +177,17 @@
     if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
         _playbackServiceDirty = NO;
         _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
+    }
+}
+
+// Handles system volume changes and then updates the player volume
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
+                       context:(void *)context {
+    if ([keyPath isEqualToString:@"outputVolume"]) {
+        float newVolume = [change[NSKeyValueChangeNewKey] floatValue];
+        [self handleVolumeChange:newVolume];
     }
 }
 
@@ -334,6 +368,29 @@
     }
 }
 
+- (void)syncAdVolume {
+    if (_adsPlaying && self.currentAdsManager) {
+        [self.currentAdsManager setVolume:self.isMuted ? 0 : (self.previousVolume ?: 1.0)];
+    }
+}
+
+- (void)toggleMute:(BOOL)mute {
+    if (mute) {
+        if (!self.isMuted) {
+            self.previousVolume = _targetVolume; // Save current volume
+            [self setVolume:@0];
+            self.isMuted = YES;
+        }
+    } else {
+        if (self.isMuted) {
+            [self setVolume:@(self.previousVolume)]; // Restore volume
+            self.isMuted = NO;
+        }
+    }
+    // handle Ad volume
+    [self syncAdVolume];
+}
+
 #pragma mark - Notification Handling
 
 - (void)registerForNotifications {
@@ -420,6 +477,10 @@
             self.onAdsPlaying(@{});
         }
     }
+
+    if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsLoaderLoaded) {
+        self.currentAdsManager = lifecycleEvent.properties[@"adsManager"];
+    }
     
     if (lifecycleEvent.eventType == kBCOVIMALifecycleEventAdsManagerDidReceiveAdEvent) {
         IMAAdEvent *adEvent = lifecycleEvent.properties[@"adEvent"];
@@ -430,6 +491,7 @@
         {
             case kIMAAdEvent_LOADED:
                 _adsPlaying = YES;
+                [self syncAdVolume];
                 break;
             case kIMAAdEvent_PAUSE:
                 break;
@@ -438,6 +500,7 @@
                 break;
             case kIMAAdEvent_STARTED:
                 _adsPlaying = YES;
+                [self syncAdVolume];
                 break;
             case kIMAAdEvent_COMPLETE:
                 _adsPlaying = NO;
@@ -504,6 +567,34 @@
     // Called when the in-app browser has closed.
     if (_adsPlaying) {
         [self.playbackController resumeAd];
+    }
+}
+
+#pragma mark - handle volume change Methods
+
+- (void)handleVolumeChange:(float)newVolume {
+    // Update mute state based on volume
+    self.isMuted = (newVolume == 0);
+
+    // callback to update react native with volume value
+    if (self.onVolumeChange) {
+        self.onVolumeChange(@{@"volume": @(newVolume)});
+    }
+
+    // update local variables
+    _targetVolume = newVolume;
+    [self setVolume:@(newVolume)];
+    [self syncAdVolume];
+}
+
+#pragma mark - cleanup Methods
+
+- (void)dealloc {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    @try {
+        [session removeObserver:self forKeyPath:@"outputVolume"];
+    } @catch (NSException *exception) {
+        // Already removed
     }
 }
 

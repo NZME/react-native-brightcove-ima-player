@@ -84,6 +84,9 @@ type BrightcoveIMAPlayerProps = ViewProps & {
   onExitFullscreen?: (
     event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
   ) => void;
+  onVolumeChange?: (
+    event: NativeSyntheticEvent<TBrightcoveIMAPlayerEventBase>
+  ) => void;
 };
 
 const ComponentName = 'BrightcoveIMAPlayerView';
@@ -153,6 +156,14 @@ export class BrightcoveIMAPlayer extends Component<BrightcoveIMAPlayerProps> {
       findNodeHandle(this),
       UIManager.getViewManagerConfig(ComponentName).Commands.pause,
       []
+    );
+  };
+
+  toggleMute = (mute: boolean) => {
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      UIManager.getViewManagerConfig(ComponentName).Commands.toggleMute,
+      [mute]
     );
   };
 

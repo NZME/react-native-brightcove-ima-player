@@ -60,6 +60,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onUpdateBufferProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onEnterFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onExitFullscreen;
+@property (nonatomic, copy) RCTDirectEventBlock onVolumeChange;
 
 
 #pragma mark - Public methods
@@ -72,5 +73,6 @@
 -(void) play;
 -(void) stopPlayback;
 -(void) dispose;
+-(void) toggleMute:(BOOL)mute;
 
 @end

@@ -39,6 +39,7 @@ RCT_EXPORT_VIEW_PROPERTY(onChangeDuration, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onUpdateBufferProgress, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onEnterFullscreen, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onExitFullscreen, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onVolumeChange, RCTDirectEventBlock);
 
 RCT_CUSTOM_VIEW_PROPERTY(settings, NSDictionary, BrightcoveIMAPlayerView) {
     if ([json isKindOfClass:[NSDictionary class]]) {
@@ -107,6 +108,15 @@ RCT_EXPORT_METHOD(dispose:(nonnull NSNumber *)reactTag) {
             [player dispose];
         }
     }];
+}
+
+RCT_EXPORT_METHOD(toggleMute:(nonnull NSNumber *)reactTag mute:(BOOL)mute) {
+  [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+    BrightcoveIMAPlayerView *player = (BrightcoveIMAPlayerView *)viewRegistry[reactTag];
+    if ([player isKindOfClass:[BrightcoveIMAPlayerView class]]) {
+      [player toggleMute:mute];
+    }
+  }];
 }
 
 @end
