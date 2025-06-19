@@ -68,7 +68,7 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean adsPlaying = false;
   private boolean inViewPort = true;
   private boolean isMuted = false;
-  private float currentVolume = 0;
+  private float unmutedVolume = 1.0f;
   private AdsManager adsManager;
   private boolean disableDefaultControl = false;
   private int bitRate = 0;
@@ -309,27 +309,35 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
   public void toggleMute(boolean mute) {
     if (mute == this.isMuted) {
-      return;
+        return; // Already in desired state
     }
+    
     this.isMuted = mute;
-    float volume = this.isMuted ? 0f : this.currentVolume;
-    setVolume(volume);
-    // if (this.adsManager != null) {
-    //   try {
-    //       this.adsManager.setVolume(volume);
-    //   } catch (Exception e) {
-    //       // Log.e("BrightcovePlayer", "Error setting ad volume", e);
-    //   }
-    // }
+    
+    if (this.isMuted) {
+        // When muting: store current volume and set to 0
+        this.unmutedVolume = getCurrentPlayerVolume();
+        setVolume(0f);
+    } else {
+        // When unmuting: restore to stored volume
+        setVolume(this.unmutedVolume);
+    }
   }
 
   public void setVolume(float volume) {
+    // Track the unmuted volume (don't update when muted)
     if (!this.isMuted) {
-      this.currentVolume = volume;
+        this.unmutedVolume = volume;
     }
     Map<String, Object> details = new HashMap<>();
     details.put(Event.VOLUME, volume);
     this.brightcoveVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
+  }
+
+  // Helper to get current volume from player
+  private float getCurrentPlayerVolume() {
+    // Implement based on your player API
+    return this.unmutedVolume; // Fallback if no direct API exists
   }
 
   public void setBitRate(int bitRate) {
