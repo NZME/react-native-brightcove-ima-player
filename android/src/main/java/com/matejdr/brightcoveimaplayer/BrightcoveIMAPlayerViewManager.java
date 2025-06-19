@@ -23,6 +23,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public static final int COMMAND_STOP_PLAYBACK = 4;
   public static final int COMMAND_TOGGLE_FULLSCREEN = 5;
   public static final int COMMAND_TOGGLE_IN_VIEW_PORT = 6;
+  public static final int COMMAND_TOGGLE_MUTE = 7;
   public static final String EVENT_ADS_LOADED = "ads_loaded";
   public static final String EVENT_READY = "ready";
   public static final String EVENT_PLAY = "play";
@@ -34,6 +35,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
   public static final String EVENT_EXIT_FULLSCREEN = "exit_fullscreen";
   public static final String EVENT_CHANGE_DURATION = "change_duration";
   public static final String EVENT_UPDATE_BUFFER_PROGRESS = "update_buffer_progress";
+  public static final String EVENT_VOLUME_CHANGE = "volume_change";
 
   private final ReactApplicationContext applicationContext;
 
@@ -133,7 +135,9 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
       "toggleFullscreen",
       COMMAND_TOGGLE_FULLSCREEN,
       "toggleInViewPort",
-      COMMAND_TOGGLE_IN_VIEW_PORT
+      COMMAND_TOGGLE_IN_VIEW_PORT,
+      "toggleMute",
+      COMMAND_TOGGLE_MUTE
     );
   }
 
@@ -166,6 +170,10 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
         view.toggleInViewPort((boolean) (args.getBoolean(0)));
         return;
       }
+      case COMMAND_TOGGLE_MUTE: {
+        view.toggleMute((boolean) (args.getBoolean(0)));
+        return;
+      }
     }
   }
 
@@ -184,6 +192,7 @@ public class BrightcoveIMAPlayerViewManager extends SimpleViewManager<Brightcove
     map.put(EVENT_UPDATE_BUFFER_PROGRESS, (Object) MapBuilder.of("registrationName", "onUpdateBufferProgress"));
     map.put(EVENT_ENTER_FULLSCREEN, (Object) MapBuilder.of("registrationName", "onEnterFullscreen"));
     map.put(EVENT_EXIT_FULLSCREEN, (Object) MapBuilder.of("registrationName", "onExitFullscreen"));
+    map.put(EVENT_VOLUME_CHANGE, (Object) MapBuilder.of("registrationName", "onVolumeChange"));
     return map;
   }
 }

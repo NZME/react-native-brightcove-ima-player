@@ -67,6 +67,9 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean playing = false;
   private boolean adsPlaying = false;
   private boolean inViewPort = true;
+  private boolean isMuted = false;
+  private float currentVolume = 0;
+  private AdsManager adsManager;
   private boolean disableDefaultControl = false;
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
@@ -304,7 +307,26 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     }
   }
 
+  public void toggleMute(boolean mute) {
+    if (mute == this.isMuted) {
+      return;
+    }
+    this.isMuted = mute;
+    float volume = this.isMuted ? 0f : this.currentVolume;
+    setVolume(volume);
+    // if (this.adsManager != null) {
+    //   try {
+    //       this.adsManager.setVolume(volume);
+    //   } catch (Exception e) {
+    //       // Log.e("BrightcovePlayer", "Error setting ad volume", e);
+    //   }
+    // }
+  }
+
   public void setVolume(float volume) {
+    if (!this.isMuted) {
+      this.currentVolume = volume;
+    }
     Map<String, Object> details = new HashMap<>();
     details.put(Event.VOLUME, volume);
     this.brightcoveVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
@@ -432,8 +454,18 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
 
     // Add "Ad Markers" where the Ads Manager says ads will appear.
     mediaController.addListener(GoogleIMAEventType.ADS_MANAGER_LOADED, event -> {
-      AdsManager manager = (AdsManager) event.properties.get("adsManager");
-      List<Float> cuepoints = manager.getAdCuePoints();
+      this.adsManager = (AdsManager) event.properties.get("adsManager");
+      if (this.adsManager != null) {
+        // try {
+        //     if (this.isMuted) {
+        //       // this.adsManager.setVolume(0f);
+        //       this.adsManager.setVolume(0f);
+        //     }
+        // } catch (Exception e) {
+        //     // Log.e("BrightcovePlayer", "Error setting ad volume", e);
+        // }
+      }
+      List<Float> cuepoints = this.adsManager.getAdCuePoints();
       for (int i = 0; i < cuepoints.size(); i++) {
         Float cuepoint = cuepoints.get(i);
         BrightcoveSeekBar brightcoveSeekBar = mediaController.getBrightcoveSeekBar();
