@@ -7,6 +7,8 @@ import android.view.Choreographer;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.media.AudioManager;
+import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
@@ -70,6 +72,8 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean isMuted = false;
   private float unmutedVolume = 1.0f;
   private AdsManager adsManager;
+  private AudioManager audioManager;
+  private int maxVolume;
   private boolean disableDefaultControl = false;
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
@@ -86,6 +90,8 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     this.applicationContext = applicationContext;
     this.applicationContext.addLifecycleEventListener(this);
     this.setBackgroundColor(Color.BLACK);
+    this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+    this.maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     setup();
   }
 
@@ -221,6 +227,57 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     });
   
   }
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent event) {
+      if (event.getAction() == KeyEvent.ACTION_DOWN) {
+          switch (event.getKeyCode()) {
+              case KeyEvent.KEYCODE_VOLUME_UP:
+              case KeyEvent.KEYCODE_VOLUME_DOWN:
+                  handleHardwareVolumePress();
+                  return true; // We handled the event
+          }
+      }
+      return super.dispatchKeyEvent(event);
+  }
+
+  private void handleHardwareVolumePress() {
+      // 1. Unmute if currently muted
+      if (this.isMuted) {
+          this.isMuted = false;
+          // 2. Update system volume to match our saved volume
+          int systemVolume = (int) (this.unmutedVolume * maxVolume);
+          audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, systemVolume, 0);
+          // 3. Update player and notify React Native
+          setVolume(this.unmutedVolume);
+      } else {
+          // Normal volume adjustment
+          float newVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) maxVolume;
+          this.unmutedVolume = newVolume; // Track unmuted volume
+          setVolume(newVolume);
+      }
+
+      // Always emit the current state
+      sendVolumeEvent();
+  }
+
+  private void sendVolumeEvent() {
+    try {
+        WritableMap event = Arguments.createMap();
+        event.putDouble("volume", this.isMuted ? 0f : this.unmutedVolume);
+        event.putBoolean("isMuted", this.isMuted);
+
+        ((ReactContext)getContext())
+            .getJSModule(RCTEventEmitter.class)
+            .receiveEvent(
+                getId(),
+                BrightcoveIMAPlayerViewManager.EVENT_VOLUME_CHANGE,
+                event
+            );
+    } catch (Exception e) {
+        Log.e("Volume", "Failed to send volume event", e);
+    }
+  }
+
   public void setAnalyticsPlayerName() {
       // Set Player Name in Brightcove Analytics
     Analytics analytics = this.brightcoveVideoView.getAnalytics();
