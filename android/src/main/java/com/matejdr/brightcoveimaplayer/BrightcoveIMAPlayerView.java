@@ -67,6 +67,8 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
   private boolean playing = false;
   private boolean adsPlaying = false;
   private boolean inViewPort = true;
+  private boolean isMuted = false;
+  private float unmutedVolume = 1.0f;
   private boolean disableDefaultControl = false;
   private int bitRate = 0;
   private int adVideoLoadTimeout = 3000;
@@ -304,10 +306,36 @@ public class BrightcoveIMAPlayerView extends RelativeLayout implements Lifecycle
     }
   }
 
+  public void toggleMute(boolean mute) {
+    if (mute == this.isMuted) {
+        return; // Already in desired state
+    }
+
+    this.isMuted = mute;
+
+    if (this.isMuted) {
+        // When muting: store current volume and set to 0
+        this.unmutedVolume = getCurrentPlayerVolume();
+        setVolume(0f);
+    } else {
+        // When unmuting: restore to stored volume
+        setVolume(this.unmutedVolume);
+    }
+  }
+
   public void setVolume(float volume) {
+    // Track the unmuted volume (don't update when muted)
+    if (!this.isMuted) {
+        this.unmutedVolume = volume;
+    }
     Map<String, Object> details = new HashMap<>();
     details.put(Event.VOLUME, volume);
     this.brightcoveVideoView.getEventEmitter().emit(EventType.SET_VOLUME, details);
+  }
+
+  // Helper to get current volume from player
+  private float getCurrentPlayerVolume() {
+    return this.unmutedVolume; // Fallback if no direct API exists
   }
 
   public void setBitRate(int bitRate) {
