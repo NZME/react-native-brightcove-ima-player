@@ -21,6 +21,7 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
+    namespace 'com.matejdr.brightcoveimaplayer'
     compileSdkVersion safeExtGet('BrightcoveImaPlayer_compileSdkVersion', 34)
     defaultConfig {
         minSdkVersion safeExtGet('BrightcoveImaPlayer_minSdkVersion', 24)
